@@ -1,0 +1,53 @@
+.main_login_box {
+    background-color: #ffffff;
+    box-shadow: 1px 1px 8px 1px gray;
+    width: 400px;
+    height: 500px;
+    text-align: center;
+    border-radius: 40px;
+    margin: 120px 560px;
+    position: absolute;
+}
+
+.main_login_box h3 {
+    font-size: 30px;
+    color: #E10944;
+    padding: 80px;
+}
+
+.main_login_box input {
+    width: 250px;
+    height: 40px;
+    border-radius: 30px;
+    text-align: center;
+    margin: 5px;
+    border: 1px solid #E10944;
+}
+
+.main_login_box .main_login_button {
+    width: 250px;
+    height: 40px;
+    font-size: 18px;
+    color: #ffffff;
+    border-radius: 30px;
+    margin: 5px;
+    border: 1px solid #E10944;
+    background-color: #E10944;
+    cursor: pointer;
+}
+
+.main_user_button_box{
+    margin: 15px;
+}
+
+.main_user_button_box p{
+    display: inline-block;
+}
+
+.main_user_button_box button {
+    display: inline-block;
+    border: none;
+    background-color: #ffffff;
+    color: #5b5b5b;
+    cursor: pointer;
+}

@@ -1,0 +1,18 @@
+.main_logo {
+    font-size: 50px;
+    padding: 250px 40px 0px;
+    color: #ffffff;
+    position: absolute;
+}
+
+.main_wrap {
+    position: relative;
+}
+
+.main_text {
+    font-size: 17px;
+    padding: 340px 40px 0px;
+    color: #ffffff;
+    position: absolute;
+    line-height: 26px;
+}
