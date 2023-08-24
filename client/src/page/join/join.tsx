@@ -26,7 +26,7 @@ export default function Join({ setJoinModalOpen }: modalPropType) {
 
 	const onSubmit = (data: joinObject) => {
 		console.log(data);
-		fetch(`/api/user/join`, {
+		fetch(`/api/user/sign-up`, {
 			method: "POST",
 			headers: { "Content-type": "application/json" },
 			body: JSON.stringify({
@@ -35,10 +35,9 @@ export default function Join({ setJoinModalOpen }: modalPropType) {
 				nickname: data.nickname,
 			}),
 		})
-			.then((res) => res.json())
+			.then((res) => console.log(res.json()))
 			.then(() => {
-				alert(`회원가입 완료! 로그인 후 이용해주세요.`);
-				// navigate("../login");
+				alert(`회원가입이 완료되었습니다!`);
 			});
 	};
 
@@ -61,7 +60,7 @@ export default function Join({ setJoinModalOpen }: modalPropType) {
 					})}
 				></input>
 				{errors.id && (
-					<div className="error_massage">{errors.id.message?.toString()}</div>
+					<div className="error_massage">{errors.id.message}</div>
 				)}
 				<input
 					type="password"
