@@ -1,6 +1,7 @@
 import "./join.css";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 interface modalPropType {
 	setJoinModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,8 +25,14 @@ export default function Join({ setJoinModalOpen }: modalPropType) {
 		formState: { isSubmitting, errors },
 	} = useForm<joinObject>();
 
+	const [idDuplicateError, setIdDuplicateError] = useState("");
+	const [nicknameDuplicateError, setNicknameDuplicateError] = useState("");
+
 	const onSubmit = (data: joinObject) => {
 		console.log(data);
+		setIdDuplicateError("");
+		setNicknameDuplicateError("");
+
 		fetch(`/api/user/sign-up`, {
 			method: "POST",
 			headers: { "Content-type": "application/json" },
@@ -35,9 +42,24 @@ export default function Join({ setJoinModalOpen }: modalPropType) {
 				nickname: data.nickname,
 			}),
 		})
-			.then((res) => console.log(res.json()))
-			.then(() => {
-				alert(`회원가입이 완료되었습니다!`);
+			.then((res) => res.json())
+			.then((data) => {
+				console.log("data", data);
+				if (data.id !== undefined) {
+					setIdDuplicateError("아이디가 중복입니다.");
+					console.log("1. idDuplicateError", idDuplicateError);
+				}
+				if (data.nickname !== undefined) {
+					setNicknameDuplicateError("닉네임이 중복입니다.");
+					console.log("2. nicknameDuplicateError", nicknameDuplicateError);
+				}
+				if (data.id === undefined && data.nickname === undefined) {
+					alert("썸에브리데이에 회원가입 되었습니다!");
+					window.location.replace("/");
+				}
+			})
+			.catch((error) => {
+				console.error("Error:", error);
 			});
 	};
 
@@ -59,9 +81,8 @@ export default function Join({ setJoinModalOpen }: modalPropType) {
 						},
 					})}
 				></input>
-				{errors.id && (
-					<div className="error_massage">{errors.id.message}</div>
-				)}
+				{errors.id && <div className="error_massage">{errors.id.message}</div>}
+				{errors && <div className="error_massage">{idDuplicateError}</div>}
 				<input
 					type="password"
 					placeholder="비밀번호를 입력하세요."
@@ -106,7 +127,7 @@ export default function Join({ setJoinModalOpen }: modalPropType) {
 						required: "닉네임은 필수 입력입니다.",
 						minLength: {
 							value: 3,
-							message: "5글자 이상이여야 합니다.",
+							message: "3글자 이상이여야 합니다.",
 						},
 					})}
 				></input>
@@ -114,6 +135,9 @@ export default function Join({ setJoinModalOpen }: modalPropType) {
 					<div className="error_massage">
 						{errors.nickname.message?.toString()}
 					</div>
+				)}
+				{errors && (
+					<div className="error_massage">{nicknameDuplicateError}</div>
 				)}
 				<button
 					className="main_login_button"
