@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './feature/user/user.app.module';
 import { User } from './entity/user.entity';
+import { AuthModule } from './feature/auth/auth.app.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { User } from './entity/user.entity';
       logging: true,
       keepConnectionAlive: true,
     }),
+    AuthModule,
     UserModule,
   ],
   controllers: [AppController],

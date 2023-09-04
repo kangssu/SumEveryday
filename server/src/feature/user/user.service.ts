@@ -26,4 +26,11 @@ export class UserService {
 
     return users;
   }
+
+  getUser(id: string): Promise<User> {
+    const user = this.userRepository.findOne({
+      where: { id },
+    });
+    return user;
+  }
 }

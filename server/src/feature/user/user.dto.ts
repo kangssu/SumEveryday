@@ -1,4 +1,9 @@
 import { IsNotEmpty, IsString, Matches, MinLength } from 'class-validator';
+export interface UserErrorMessageObject {
+  idErrorMessage?: string;
+  nicknameErrorMessage?: string;
+  passwordErrorMessage?: string;
+}
 
 export class CreateUserDto {
   @IsString()
@@ -19,4 +24,14 @@ export class CreateUserDto {
   @IsNotEmpty()
   @MinLength(3)
   nickname!: string;
+}
+
+export class LoginUserDto {
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
 }

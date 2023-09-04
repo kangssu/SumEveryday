@@ -2,6 +2,7 @@ import "./join.css";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { ErrorCode } from "../../enum/errorCode.enum";
 
 interface modalPropType {
 	setJoinModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -45,15 +46,18 @@ export default function Join({ setJoinModalOpen }: modalPropType) {
 			.then((res) => res.json())
 			.then((data) => {
 				console.log("data", data);
-				if (data.id !== undefined) {
+				if (data.idErrorMessage === ErrorCode.USER_ID_DUPLICATE) {
 					setIdDuplicateError("아이디가 중복입니다.");
 					console.log("1. idDuplicateError", idDuplicateError);
 				}
-				if (data.nickname !== undefined) {
+				if (data.nicknameErrorMessage === ErrorCode.USER_NICKNAME_DUPLICATE) {
 					setNicknameDuplicateError("닉네임이 중복입니다.");
 					console.log("2. nicknameDuplicateError", nicknameDuplicateError);
 				}
-				if (data.id === undefined && data.nickname === undefined) {
+				if (
+					data.idErrorMessage === undefined &&
+					data.nicknameErrorMessage === undefined
+				) {
 					alert("썸에브리데이에 회원가입 되었습니다!");
 					window.location.replace("/");
 				}

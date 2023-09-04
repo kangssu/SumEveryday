@@ -108,3 +108,8 @@ input:focus {
   display: block;
   clear: both;
 }
+
+.error_massage{
+  color:red;
+  text-align: center;
+}

@@ -1,11 +1,8 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './user.dto';
-
-interface UserDuplicateObject {
-  id?: string;
-  nickname?: string;
-}
+import { CreateUserDto, UserErrorMessageObject } from './user.dto';
+import { JwtAuthGuard } from '../auth/guard/jwt.guard';
+import { ErrorCode } from 'src/enum/errorCode.enum';
 
 @Controller({
   path: '/api',
@@ -16,22 +13,35 @@ export class UserController {
   @Post('/user/sign-up')
   async createUser(
     @Body() createUserDto: CreateUserDto,
-  ): Promise<UserDuplicateObject> {
+  ): Promise<UserErrorMessageObject> {
     const users = await this.userService.getUsers(createUserDto);
-    const userDuplicateObject: UserDuplicateObject = {};
+    const userDuplicateErrorMessageObject: UserErrorMessageObject = {};
 
-    if (users) {
+    if (users.length !== 0) {
       for (const user of users) {
         if (user.id === createUserDto.id) {
-          userDuplicateObject.id = createUserDto.id;
+          userDuplicateErrorMessageObject.idErrorMessage =
+            ErrorCode.USER_ID_DUPLICATE;
         }
         if (user.nickname === createUserDto.nickname) {
-          userDuplicateObject.nickname = createUserDto.nickname;
+          userDuplicateErrorMessageObject.nicknameErrorMessage =
+            ErrorCode.USER_NICKNAME_DUPLICATE;
         }
       }
-      return userDuplicateObject;
+      return userDuplicateErrorMessageObject;
     }
+
     await this.userService.createUser(createUserDto);
-    return userDuplicateObject;
+    return userDuplicateErrorMessageObject;
+  }
+
+  // 여기 임시! 다시 확인해야함
+  @UseGuards(JwtAuthGuard)
+  @Get('/test')
+  async getProfile(@Req() req: any) {
+    console.log('들어오나?');
+    const user = req.user;
+    console.log('뭐징?');
+    return user;
   }
 }
