@@ -1,11 +1,17 @@
 import "./accountBook.css";
 import { AiFillPlusSquare } from "react-icons/ai";
 import { AiFillMinusSquare } from "react-icons/ai";
-import { BsDoorOpenFill } from "react-icons/bs";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getCookie } from "../../components/layout/layout";
+import Header from "../../components/layout/header";
+import { Navigate, useNavigate } from "react-router-dom";
+import Footer from "../../components/layout/footer";
 
 export default function AccountBook() {
+	const history = useNavigate();
+	const goAdmin = () => {
+		history("/admin");
+	};
 	// useEffect(() => {
 	// 	fetch("/api/test", {
 	// 		method: "GET",
@@ -21,14 +27,13 @@ export default function AccountBook() {
 
 	return (
 		<div className="container">
-			<h1 className="subLogo">SumEveryday</h1>
-			<button className="subLogout">LOGOUT <BsDoorOpenFill /></button>
+			<Header></Header>
 			<div className="subBox">
 				<div className="subBoxTop">
-					<h3>9</h3>
+					<h3 className="month">9</h3>
 					<p>월의 기록</p>
 					<div className="buttonBox">
-						<button className="writeButton">가계부 작성</button>
+						<button className="writeButton" onClick={goAdmin}>가계부 관리</button>
 						<button className="calendarButton">달력보기</button>
 					</div>
 					<div className="totalTableBox">
@@ -154,9 +159,7 @@ export default function AccountBook() {
 					</div>
 				</div>
 			</div>
-			<div className="contactContent">
-				<h5>💘 문의사항은 rkdtn0475@gmail.com으로 연락주세요.</h5>
-			</div>
+			<Footer></Footer>
 		</div>
 	);
 }
