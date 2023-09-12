@@ -1,5 +1,5 @@
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
-import { AccountBookService } from './admin.service';
+import { AdminService } from './admin.service';
 import { CreateAcccountBookDto } from './admin.dto';
 import { AccountBook } from 'src/entity/accountBook.entity';
 import { JwtAuthGuard } from '../auth/guard/jwt.guard';
@@ -7,8 +7,8 @@ import { JwtAuthGuard } from '../auth/guard/jwt.guard';
 @Controller({
   path: '/api',
 })
-export class AccountBookController {
-  constructor(private readonly accountBookService: AccountBookService) {}
+export class AdminController {
+  constructor(private readonly accountBookService: AdminService) {}
 
   @Post('/accountBook/create')
   @UseGuards(JwtAuthGuard)

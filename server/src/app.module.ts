@@ -6,8 +6,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './feature/user/user.app.module';
 import { User } from './entity/user.entity';
 import { AuthModule } from './feature/auth/auth.app.module';
-import { AccountBookModule } from './feature/admin/admin.app.module';
+import { AdminModule } from './feature/admin/admin.app.module';
 import { AccountBook } from './entity/accountBook.entity';
+import { AccountBookModule } from './feature/accountBook/accountBook.app.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { AccountBook } from './entity/accountBook.entity';
     }),
     AuthModule,
     UserModule,
+    AdminModule,
     AccountBookModule,
   ],
   controllers: [AppController],

@@ -6,12 +6,26 @@ import Header from "../../components/layout/header";
 import { Navigate, useNavigate } from "react-router-dom";
 import Footer from "../../components/layout/footer";
 import { useForm } from "react-hook-form";
+import { getCookie } from "../../components/cookie/cookie";
 
 export default function AccountBook() {
 	const history = useNavigate();
 	const goAdmin = () => {
 		history("/admin");
 	};
+
+	useEffect(() => {
+		fetch("/api/accountBook/currentMonthList", {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${getCookie("my-token")}`,
+			},
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				console.log("제대로 전부 가져오는지 확인 : ", data);
+			});
+	}, []);
 
 	return (
 		<div className="container">
