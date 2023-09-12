@@ -12,7 +12,6 @@
 .subTitle .backButton {
     width: 110px;
     height: 35px;
-    color: #E10944;
     background-color: #ffffff;
     cursor: pointer;
     border: none;
@@ -152,6 +151,7 @@
 
 .listSingleBox h3,
 .listSingleBox p,
+.listSingleBox span,
 .listSingleBox button {
     display: inline-block;
     margin: 5px;
@@ -164,10 +164,22 @@
 
 .listSingleBox p {
     font-size: 14px;
+    width: 230px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: bolder;
+}
+
+.listSingleBox span {
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100px;
 }
 
 .listSingleBox .modifyButton {
-    margin-left: 200px;
     background-color: #E10944;
     color: #ffffff;
     border: 1px solid #E10944;

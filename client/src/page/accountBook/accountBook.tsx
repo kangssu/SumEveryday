@@ -2,28 +2,16 @@ import "./accountBook.css";
 import { AiFillPlusSquare } from "react-icons/ai";
 import { AiFillMinusSquare } from "react-icons/ai";
 import { useEffect, useState } from "react";
-import { getCookie } from "../../components/layout/layout";
 import Header from "../../components/layout/header";
 import { Navigate, useNavigate } from "react-router-dom";
 import Footer from "../../components/layout/footer";
+import { useForm } from "react-hook-form";
 
 export default function AccountBook() {
 	const history = useNavigate();
 	const goAdmin = () => {
 		history("/admin");
 	};
-	// useEffect(() => {
-	// 	fetch("/api/test", {
-	// 		method: "GET",
-	//         headers:{
-	//             Authorization:`Bearer ${getCookie('access-token')}`,
-	//         }
-	// 	})
-	// 		.then((res) => res.json())
-	// 		.then((res) => {
-	// 			console.log(1, res);
-	// 		});
-	// }, []);
 
 	return (
 		<div className="container">
@@ -33,7 +21,9 @@ export default function AccountBook() {
 					<h3 className="month">9</h3>
 					<p>월의 기록</p>
 					<div className="buttonBox">
-						<button className="writeButton" onClick={goAdmin}>가계부 관리</button>
+						<button className="writeButton" onClick={goAdmin}>
+							가계부 관리
+						</button>
 						<button className="calendarButton">달력보기</button>
 					</div>
 					<div className="totalTableBox">

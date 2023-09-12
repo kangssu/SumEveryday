@@ -12,6 +12,7 @@
 		"@types/react-dom": "^18.2.7",
 		"axios": "^1.4.0",
 		"http-proxy-middleware": "^2.0.6",
+		"mkcert": "^3.0.0",
 		"prop-types": "^15.8.1",
 		"react": "^18.2.0",
 		"react-cookie": "^6.1.0",
@@ -25,6 +26,7 @@
 	},
 	"scripts": {
 		"start": "react-scripts start",
+		"start:dev": "set HTTPS=true&&set SSL_CRT_FILE=ssl/localhost.pem&&set SSL_KEY_FILE=ssl/localhost-key.pem&&npm run start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject"
