@@ -1,5 +1,5 @@
 import { Controller, Get, UseGuards, Req } from '@nestjs/common';
-import { AccountBookService } from './accountBook.service';
+import { AccountBookService, weeklyAccountBook } from './accountBook.service';
 import { JwtAuthGuard } from '../auth/guard/jwt.guard';
 
 @Controller({
@@ -10,10 +10,11 @@ export class AccountBookController {
 
   @Get('/accountBook/currentMonthList')
   @UseGuards(JwtAuthGuard)
-  getCurrentMonthAccountBookByUserId(@Req() req: any) {
-    const user = this.accountBookService.getCurrentMonthAccountBookByUserId(
+  getCurrentMonthAccountBookByUserId(
+    @Req() req: any,
+  ): Promise<weeklyAccountBook> {
+    return this.accountBookService.getCurrentMonthAccountBookByUserId(
       req.user.id,
     );
-    return user;
   }
 }

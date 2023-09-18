@@ -39,9 +39,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get('/test')
   async getProfile(@Req() req: any) {
-    console.log('들어오나?');
     const user = req.user;
-    console.log('뭐징?');
     return user;
   }
 }

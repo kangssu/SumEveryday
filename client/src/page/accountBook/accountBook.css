@@ -165,3 +165,13 @@
     color: #E10944;
     height: 20px;
 }
+
+.weekTableBox .noContent{
+    text-align: center;
+    color: #E10944;
+    height: 350px;
+}
+
+.weekTableBox .noContent td{
+    font-size: 20px;
+}

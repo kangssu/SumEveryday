@@ -16,7 +16,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: any): Promise<Pick<User, 'id' | 'nickname'>> {
     const user = await this.userService.getUser(payload.id);
-    console.log('여기서 확인하자...', user);
     if (user) {
       return user;
     } else {

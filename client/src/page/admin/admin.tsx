@@ -38,7 +38,7 @@ export default function Admin() {
 			method: "POST",
 			headers: {
 				"Content-type": "application/json",
-				Authorization: `Bearer ${getCookie("my-token")}`,
+				Authorization: `Bearer ${sessionStorage.getItem("access-token")}`,
 			},
 			body: JSON.stringify({
 				category: data.category,

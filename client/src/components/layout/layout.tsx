@@ -3,7 +3,6 @@ import { useState } from "react";
 import Join from "../../page/join/join";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { setCookie } from "../cookie/cookie";
 
 interface loginObject {
 	id: string;
@@ -35,11 +34,11 @@ export default function Layout() {
 		fetch(`/api/login`, {
 			method: "POST",
 			headers: { "Content-type": "application/json" },
-
 			body: JSON.stringify({
 				id: data.id,
 				password: data.password,
 			}),
+			
 		})
 			.then((res) => res.json())
 			.then((data) => {
@@ -54,13 +53,7 @@ export default function Layout() {
 					data.userErrorMessageObject.idErrorMessage === undefined &&
 					data.userErrorMessageObject.passwordErrorMessage === undefined
 				) {
-					setCookie("my-token", data.accessToken, {
-						domain: "localhost",
-						path: "/",
-						sameSite: "none",
-						secure: true,
-						httpOnly: true,
-					});
+					sessionStorage.setItem("access-token",data.accessToken);
 					alert("썸에브리데이에 오신걸 환영합니다!");
 					history("/account-book");
 				}
