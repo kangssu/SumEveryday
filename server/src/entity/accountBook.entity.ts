@@ -10,7 +10,7 @@ import {
 
 export class AccountBookDate {
   @IsNumber()
-  year: number;
+  year?: number;
 
   @IsNumber()
   month: number;

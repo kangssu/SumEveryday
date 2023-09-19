@@ -86,6 +86,7 @@
     border-collapse: separate;
     border-spacing: 0;
     min-width: 350px;
+    table-layout: fixed;
 }
 
 .weekTableBox table tr th,
@@ -166,12 +167,21 @@
     height: 20px;
 }
 
-.weekTableBox .noContent{
+.weekTableBox .noContent {
     text-align: center;
     color: #E10944;
     height: 350px;
 }
 
-.weekTableBox .noContent td{
+.weekTableBox .noContent td {
     font-size: 20px;
+}
+
+.weekTableBox .emptyContent {
+    margin-left: 100px;
+}
+
+.plusPayBox .plusAndMinusIcon,
+.minusPayBox .plusAndMinusIcon {
+    margin-right: 5px;
 }

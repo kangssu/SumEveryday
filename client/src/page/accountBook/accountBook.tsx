@@ -3,12 +3,15 @@ import { AiFillPlusSquare } from "react-icons/ai";
 import { AiFillMinusSquare } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import Header from "../../components/layout/header";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Footer from "../../components/layout/footer";
-import { useForm } from "react-hook-form";
-import { getCookie } from "../../components/cookie/cookie";
-import { Week } from "../../enum/accountBook.enum";
-import { number } from "prop-types";
+import {
+	AccountBookObject,
+	WeeklyAccountBookObject,
+	WeeklyExpenseTotalObject,
+	WeeklyIncomeTotalObject,
+} from "../../object/accountBookObject";
+import { Category } from "../../enum/accountBook.enum";
 
 export default function AccountBook() {
 	const history = useNavigate();
@@ -17,6 +20,7 @@ export default function AccountBook() {
 	};
 	const [weekMaxCount, setWeekMaxCount] = useState(0);
 	const [nowMonth, setNowMonth] = useState("");
+	const [weeklyAccountBook, setWeeklyAccountBook] = useState<WeeklyAccountBookObject>();
 
 	useEffect(() => {
 		fetch("/api/accountBook/currentMonthList", {
@@ -29,12 +33,13 @@ export default function AccountBook() {
 			.then((res) => res.json())
 			.then((data) => {
 				console.log("제대로 전부 가져오는지 확인 : ", data);
+				setWeeklyAccountBook(data);
+				setNowMonth(data.currentMonth);
 				const firstWeekCount = data.firstWeek.length;
 				const secondWeekCount = data.secondWeek.length;
 				const thirdWeekCount = data.thirdWeek.length;
 				const fourthWeekCount = data.fourthWeek.length;
 				const fifthWeekCount = data.fifthWeek.length;
-				setNowMonth(data.currentMonth);
 
 				setWeekMaxCount(
 					Math.max(
@@ -47,6 +52,398 @@ export default function AccountBook() {
 				);
 			});
 	}, []);
+
+	const weeklyTotal = (pay: number[]) => {
+		const total = pay.reduce((total: number, pay: number) => total + pay, 0);
+		return String(total).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	};
+
+	const calculationWeeklyAmounts = (weeklyAccountBook: any) => {
+		const weeklyIncomeTotal: WeeklyIncomeTotalObject = {};
+		const weeklyExpenseTotal: WeeklyExpenseTotalObject = {};
+
+		if (weeklyAccountBook.firstWeek.length > 0) {
+			if (weeklyAccountBook.firstWeek.category === Category.EXPENSE) {
+				const weeklyTotalResult = weeklyTotal(
+					weeklyAccountBook.firstWeek.map((firstWeek: AccountBookObject) =>
+						Number(firstWeek.pay)
+					)
+				);
+				weeklyExpenseTotal.firstWeek = weeklyTotalResult;
+			} else {
+				const weeklyTotalResult = weeklyTotal(
+					weeklyAccountBook.firstWeek.map((firstWeek: AccountBookObject) =>
+						Number(firstWeek.pay)
+					)
+				);
+				weeklyIncomeTotal.firstWeek = weeklyTotalResult;
+			}
+		}
+
+		if (weeklyAccountBook.secondWeek.length > 0) {
+			if (weeklyAccountBook.secondWeek.category === Category.EXPENSE) {
+				const weeklyTotalResult = weeklyTotal(
+					weeklyAccountBook.secondWeek.map((secondWeek: AccountBookObject) =>
+						Number(secondWeek.pay)
+					)
+				);
+				weeklyExpenseTotal.secondWeek = weeklyTotalResult;
+			} else {
+				const weeklyTotalResult = weeklyTotal(
+					weeklyAccountBook.secondWeek.map((secondWeek: AccountBookObject) =>
+						Number(secondWeek.pay)
+					)
+				);
+				weeklyIncomeTotal.secondWeek = weeklyTotalResult;
+			}
+		}
+
+		if (weeklyAccountBook.thirdWeek.length > 0) {
+			if (weeklyAccountBook.thirdWeek.category === Category.EXPENSE) {
+				const weeklyTotalResult = weeklyTotal(
+					weeklyAccountBook.thirdWeek.map((thirdWeek: AccountBookObject) =>
+						Number(thirdWeek.pay)
+					)
+				);
+				weeklyExpenseTotal.thirdWeek = weeklyTotalResult;
+			} else {
+				const weeklyTotalResult = weeklyTotal(
+					weeklyAccountBook.thirdWeek.map((thirdWeek: AccountBookObject) =>
+						Number(thirdWeek.pay)
+					)
+				);
+				weeklyIncomeTotal.thirdWeek = weeklyTotalResult;
+			}
+		}
+
+		if (weeklyAccountBook.fourthWeek.length > 0) {
+			if (weeklyAccountBook.fourthWeek.category === Category.EXPENSE) {
+				const weeklyTotalResult = weeklyTotal(
+					weeklyAccountBook.fourthWeek.map((fourthWeek: AccountBookObject) =>
+						Number(fourthWeek.pay)
+					)
+				);
+				weeklyExpenseTotal.fourthWeek = weeklyTotalResult;
+			} else {
+				const weeklyTotalResult = weeklyTotal(
+					weeklyAccountBook.fourthWeek.map((fourthWeek: AccountBookObject) =>
+						Number(fourthWeek.pay)
+					)
+				);
+				weeklyIncomeTotal.fourthWeek = weeklyTotalResult;
+			}
+		}
+
+		if (weeklyAccountBook.fifthWeek.length > 0) {
+			if (weeklyAccountBook.fifthWeek.category === Category.EXPENSE) {
+				const weeklyTotalResult = weeklyTotal(
+					weeklyAccountBook.fifthWeek.map((fifthWeek: AccountBookObject) =>
+						Number(fifthWeek.pay)
+					)
+				);
+				weeklyExpenseTotal.fifthWeek = weeklyTotalResult;
+			} else {
+				const weeklyTotalResult = weeklyTotal(
+					weeklyAccountBook.fifthWeek.map((fifthWeek: AccountBookObject) =>
+						Number(fifthWeek.pay)
+					)
+				);
+				weeklyIncomeTotal.fifthWeek = weeklyTotalResult;
+			}
+		}
+
+		return {
+			weeklyIncomeTotal: weeklyIncomeTotal,
+			weeklyExpenseTotal: weeklyExpenseTotal,
+		};
+	};
+
+	const rendering = (weeklyAccountBook: any) => {
+		const result = [];
+		const calculationResult = calculationWeeklyAmounts(weeklyAccountBook);
+
+		for (let i = 0; i < weekMaxCount; i++) {
+			result.push(
+				<tr key={i}>
+					<td colSpan={2}>
+						{weeklyAccountBook.firstWeek.length > 0 ? (
+							<>
+								<span className="dayBox">
+									{weeklyAccountBook.firstWeek[i].date.day}
+								</span>
+								<span className="dayContentBox">
+									{weeklyAccountBook.firstWeek[i].content}
+								</span>
+								{weeklyAccountBook.firstWeek[i].category === "수입" ? (
+									<span className="plusPayBox">
+										<AiFillPlusSquare
+											fontSize="16px"
+											color="#E10944"
+											className="plusAndMinusIcon"
+										/>
+										{weeklyAccountBook.firstWeek[i].pay.replace(
+											/\B(?=(\d{3})+(?!\d))/g,
+											","
+										)}
+										원
+									</span>
+								) : (
+									<span className="minusPayBox">
+										<AiFillMinusSquare
+											fontSize="16px"
+											color="#5b5b5b"
+											className="plusAndMinusIcon"
+										/>
+										{weeklyAccountBook.firstWeek[i].pay.replace(
+											/\B(?=(\d{3})+(?!\d))/g,
+											","
+										)}
+										원
+									</span>
+								)}
+							</>
+						) : (
+							<span className="emptyContent">💘</span>
+						)}
+					</td>
+					<td colSpan={2}>
+						{weeklyAccountBook.secondWeek.length > 0 ? (
+							<>
+								<span className="dayBox">
+									{weeklyAccountBook.secondWeek[i].date.day}
+								</span>
+								<span className="dayContentBox">
+									{weeklyAccountBook.secondWeek[i].content}
+								</span>
+								{weeklyAccountBook.secondWeek[i].category === "수입" ? (
+									<span className="plusPayBox">
+										<AiFillPlusSquare
+											fontSize="16px"
+											color="#E10944"
+											className="plusAndMinusIcon"
+										/>
+										{weeklyAccountBook.secondWeek[i].pay.replace(
+											/\B(?=(\d{3})+(?!\d))/g,
+											","
+										)}
+										원
+									</span>
+								) : (
+									<span className="minusPayBox">
+										<AiFillMinusSquare
+											fontSize="16px"
+											color="#5b5b5b"
+											className="plusAndMinusIcon"
+										/>
+										{weeklyAccountBook.secondWeek[i].pay.replace(
+											/\B(?=(\d{3})+(?!\d))/g,
+											","
+										)}
+										원
+									</span>
+								)}
+							</>
+						) : (
+							<span className="emptyContent">💘</span>
+						)}
+					</td>
+					<td colSpan={2}>
+						{weeklyAccountBook.thirdWeek.length > 0 ? (
+							<>
+								<span className="dayBox">
+									{weeklyAccountBook.thirdWeek[i].date.day}
+								</span>
+								<span className="dayContentBox">
+									{weeklyAccountBook.thirdWeek[i].content}
+								</span>
+								{weeklyAccountBook.thirdWeek[i].category === "수입" ? (
+									<span className="plusPayBox">
+										<AiFillPlusSquare
+											fontSize="16px"
+											color="#E10944"
+											className="plusAndMinusIcon"
+										/>
+										{weeklyAccountBook.thirdWeek[i].pay.replace(
+											/\B(?=(\d{3})+(?!\d))/g,
+											","
+										)}
+										원
+									</span>
+								) : (
+									<span className="minusPayBox">
+										<AiFillMinusSquare
+											fontSize="16px"
+											color="#5b5b5b"
+											className="plusAndMinusIcon"
+										/>
+										{weeklyAccountBook.thirdWeek[i].pay.replace(
+											/\B(?=(\d{3})+(?!\d))/g,
+											","
+										)}
+										원
+									</span>
+								)}
+							</>
+						) : (
+							<span className="emptyContent">💘</span>
+						)}
+					</td>
+					<td colSpan={2}>
+						{weeklyAccountBook.fourthWeek.length > 0 ? (
+							<>
+								<span className="dayBox">
+									{weeklyAccountBook.fourthWeek[i].date.day}
+								</span>
+								<span className="dayContentBox">
+									{weeklyAccountBook.fourthWeek[i].content}
+								</span>
+								{weeklyAccountBook.fourthWeek[i].category === "수입" ? (
+									<span className="plusPayBox">
+										<AiFillPlusSquare
+											fontSize="16px"
+											color="#E10944"
+											className="plusAndMinusIcon"
+										/>
+										{weeklyAccountBook.fourthWeek[i].pay.replace(
+											/\B(?=(\d{3})+(?!\d))/g,
+											","
+										)}
+										원
+									</span>
+								) : (
+									<span className="minusPayBox">
+										<AiFillMinusSquare
+											fontSize="16px"
+											color="#5b5b5b"
+											className="plusAndMinusIcon"
+										/>
+										{weeklyAccountBook.fourthWeek[i].pay.replace(
+											/\B(?=(\d{3})+(?!\d))/g,
+											","
+										)}
+										원
+									</span>
+								)}
+							</>
+						) : (
+							<span className="emptyContent">💘</span>
+						)}
+					</td>
+					<td colSpan={2}>
+						{weeklyAccountBook.fifthWeek.length > 0 ? (
+							<>
+								<span className="dayBox">
+									{weeklyAccountBook.fifthWeek[i].date.day}
+								</span>
+								<span className="dayContentBox">
+									{weeklyAccountBook.fifthWeek[i].content}
+								</span>
+								{weeklyAccountBook.fifthWeek[i].category === "수입" ? (
+									<span className="plusPayBox">
+										<AiFillPlusSquare
+											fontSize="16px"
+											color="#E10944"
+											className="plusAndMinusIcon"
+										/>
+										{weeklyAccountBook.fifthWeek[i].pay.replace(
+											/\B(?=(\d{3})+(?!\d))/g,
+											","
+										)}
+										원
+									</span>
+								) : (
+									<span className="minusPayBox">
+										<AiFillMinusSquare
+											fontSize="16px"
+											color="#5b5b5b"
+											className="plusAndMinusIcon"
+										/>
+										{weeklyAccountBook.fifthWeek[i].pay.replace(
+											/\B(?=(\d{3})+(?!\d))/g,
+											","
+										)}
+										원
+									</span>
+								)}
+							</>
+						) : (
+							<span className="emptyContent">💘</span>
+						)}
+					</td>
+				</tr>
+			);
+		}
+
+		result.push(
+			<>
+				<tr key={weeklyAccountBook.currentMonth}>
+					<td>주간 수입</td>
+					{calculationResult.weeklyIncomeTotal.firstWeek !== undefined ? (
+						<td>{calculationResult.weeklyIncomeTotal.firstWeek}원</td>
+					) : (
+						<td>0원</td>
+					)}
+					<td>주간 수입</td>
+					{calculationResult.weeklyIncomeTotal.secondWeek !== undefined ? (
+						<td>{calculationResult.weeklyIncomeTotal.secondWeek}원</td>
+					) : (
+						<td>0원</td>
+					)}
+					<td>주간 수입</td>
+					{calculationResult.weeklyIncomeTotal.thirdWeek !== undefined ? (
+						<td>{calculationResult.weeklyIncomeTotal.thirdWeek}원</td>
+					) : (
+						<td>0원</td>
+					)}
+					<td>주간 수입</td>
+					{calculationResult.weeklyIncomeTotal.fourthWeek !== undefined ? (
+						<td>{calculationResult.weeklyIncomeTotal.fourthWeek}원</td>
+					) : (
+						<td>0원</td>
+					)}
+					<td>주간 수입</td>
+					{calculationResult.weeklyIncomeTotal.fifthWeek !== undefined ? (
+						<td>{calculationResult.weeklyIncomeTotal.fifthWeek}원</td>
+					) : (
+						<td>0원</td>
+					)}
+				</tr>
+				<tr>
+					<td>주간 지출</td>
+					{calculationResult.weeklyExpenseTotal.firstWeek !== undefined ? (
+						<td>{calculationResult.weeklyExpenseTotal.firstWeek}원</td>
+					) : (
+						<td>0원</td>
+					)}
+					<td>주간 지출</td>
+					{calculationResult.weeklyExpenseTotal.secondWeek !== undefined ? (
+						<td>{calculationResult.weeklyExpenseTotal.secondWeek}원</td>
+					) : (
+						<td>0원</td>
+					)}
+					<td>주간 지출</td>
+					{calculationResult.weeklyExpenseTotal.thirdWeek !== undefined ? (
+						<td>{calculationResult.weeklyExpenseTotal.thirdWeek}원</td>
+					) : (
+						<td>0원</td>
+					)}
+					<td>주간 지출</td>
+					{calculationResult.weeklyExpenseTotal.fourthWeek !== undefined ? (
+						<td>{calculationResult.weeklyExpenseTotal.fourthWeek}원</td>
+					) : (
+						<td>0원</td>
+					)}
+					<td>주간 지출</td>
+					{calculationResult.weeklyExpenseTotal.fifthWeek !== undefined ? (
+						<td>{calculationResult.weeklyExpenseTotal.fifthWeek}원</td>
+					) : (
+						<td>0원</td>
+					)}
+				</tr>
+			</>
+		);
+		return result;
+	};
 
 	return (
 		<div className="container">
@@ -94,94 +491,7 @@ export default function AccountBook() {
 							</thead>
 							<tbody>
 								{weekMaxCount > 0 ? (
-									<>
-										<tr>
-											<td colSpan={2}>
-												<span className="dayBox">2</span>
-												<span className="dayContentBox">
-													순대,떡볶이,튀김 2인분
-												</span>
-												<span className="minusPayBox">
-													<AiFillMinusSquare fontSize="16px" color="#5b5b5b" />
-													15,000원
-												</span>
-											</td>
-											<td colSpan={2}>
-												<span className="dayBox">10</span>
-												<span className="dayContentBox">대림미술관 전시회</span>
-												<span className="plusPayBox">
-													<AiFillPlusSquare fontSize="16px" color="#E10944" />
-													20,000원
-												</span>
-											</td>
-											<td colSpan={2}>
-												<span className="dayBox">18</span>
-												<span className="dayContentBox">올리브영 폼클렌징</span>
-												<span className="plusPayBox">
-													<AiFillPlusSquare fontSize="16px" color="#E10944" />
-													15,000원
-												</span>
-											</td>
-											<td colSpan={2}>
-												<span className="dayBox">20</span>
-												<span className="dayContentBox">월급</span>
-												<span className="plusPayBox">
-													<AiFillPlusSquare fontSize="16px" color="#E10944" />
-													5,600,000원
-												</span>
-											</td>
-											<td colSpan={2}>
-												<span className="dayBox">28</span>
-												<span className="dayContentBox">
-													올리브영 폼클렌징,클렌징 오일 세트
-												</span>
-												<span className="minusPayBox">
-													<AiFillMinusSquare fontSize="16px" color="#5b5b5b" />
-													32,000원
-												</span>
-											</td>
-										</tr>
-										<tr>
-											<td colSpan={2}>
-												<span className="dayBox">28</span>
-												<span className="dayContentBox">
-													올리브영 폼클렌징,클렌징 오일 세트
-												</span>
-												<span className="plusPayBox">
-													<AiFillPlusSquare fontSize="16px" color="#E10944" />
-													32,000원
-												</span>
-											</td>
-											<td colSpan={2}></td>
-											<td colSpan={2}></td>
-											<td colSpan={2}></td>
-											<td colSpan={2}></td>
-										</tr>
-										<tr>
-											<td>주간 수입</td>
-											<td>2,000,000원</td>
-											<td>주간 수입</td>
-											<td>100,000원</td>
-											<td>주간 수입</td>
-											<td>0원</td>
-											<td>주간 수입</td>
-											<td>15,000원</td>
-											<td>주간 수입</td>
-											<td>250,000원</td>
-										</tr>
-										<tr>
-											<td>주간 지출</td>
-											<td>2,000,000원</td>
-											<td>주간 지출</td>
-											<td>100,000원</td>
-											<td>주간 지출</td>
-											<td>0원</td>
-											<td>주간 지출</td>
-											<td>15,000원</td>
-											<td>주간 지출</td>
-											<td>250,000원</td>
-										</tr>
-									</>
+									<>{rendering(weeklyAccountBook)}</>
 								) : (
 									<>
 										<tr className="noContent">

@@ -20,11 +20,10 @@ export class AdminService {
     createAccountBookDto.date.year = now.getFullYear();
 
     const originPay = createAccountBookDto.pay;
-    const replacePay = originPay.replace(
+    createAccountBookDto.pay = originPay.replace(
       /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gim,
       '',
     );
-    createAccountBookDto.pay = replacePay.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
     const weekResult = () => {
       const firstDay = new Date(now.setDate(1)).getDay();
