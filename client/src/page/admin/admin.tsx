@@ -63,7 +63,7 @@ export default function Admin() {
 	return (
 		<div className="container">
 			<Header></Header>
-			<div className="subBox">
+			<div className="subAdminBox">
 				<div className="subTitle">
 					<BsFillGearFill className="bsFillGearFillIcon" color="#E10944" />
 					<h3>가계부 관리</h3>

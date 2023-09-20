@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccountBook } from 'src/entity/accountBook.entity';
-import { Week } from 'src/enum/accountBook.enum';
+import { Category, Week } from 'src/enum/accountBook.enum';
+import { Util } from 'src/util/util';
 import { Repository } from 'typeorm';
 
 export interface weeklyAccountBook {
@@ -11,6 +12,11 @@ export interface weeklyAccountBook {
   thirdWeek: AccountBook[];
   fourthWeek: AccountBook[];
   fifthWeek: AccountBook[];
+  monthDetail: {
+    incomeTotal: string;
+    expenceTotal: string;
+    balance: string;
+  };
 }
 
 @Injectable()
@@ -31,6 +37,7 @@ export class AccountBookService {
       .andWhere("JSON_UNQUOTE(JSON_EXTRACT(date, '$.month')) = :month", {
         month,
       })
+      .orderBy("JSON_UNQUOTE(JSON_EXTRACT(date, '$.day'))")
       .getMany();
 
     const firstWeek = [];
@@ -59,6 +66,18 @@ export class AccountBookService {
       }
     }
 
+    const incomeTotal = Util.calculateByMonth(
+      accountBookList,
+      Category.IMPORTATION,
+    );
+
+    const expenceTotal = Util.calculateByMonth(
+      accountBookList,
+      Category.EXPENSE,
+    );
+
+    const balance = incomeTotal - expenceTotal;
+
     return {
       currentMonth: month,
       firstWeek: firstWeek,
@@ -66,6 +85,11 @@ export class AccountBookService {
       thirdWeek: thirdWeek,
       fourthWeek: fourthWeek,
       fifthWeek: fifthWeek,
+      monthDetail: {
+        incomeTotal: Util.setReduce(incomeTotal),
+        expenceTotal: Util.setReduce(expenceTotal),
+        balance: Util.setReduce(balance),
+      },
     };
   }
 }

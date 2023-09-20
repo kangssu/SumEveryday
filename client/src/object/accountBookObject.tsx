@@ -41,4 +41,9 @@ export interface WeeklyAccountBookObject {
 	thirdWeek: AccountBookObject[];
 	fourthWeek: AccountBookObject[];
 	fifthWeek: AccountBookObject[];
+	monthDetail: {
+		incomeTotal: string;
+		expenceTotal: string;
+		balance: string;
+	  }
   }

@@ -1,4 +1,4 @@
-import { IsEnum, IsObject, IsString, ValidateNested } from 'class-validator';
+import { IsEnum, IsObject, IsString } from 'class-validator';
 import { AccountBookDate } from 'src/entity/accountBook.entity';
 import { Category } from 'src/enum/accountBook.enum';
 
@@ -7,7 +7,6 @@ export class CreateAcccountBookDto {
   category!: Category;
 
   @IsObject()
-  @ValidateNested()
   date!: AccountBookDate;
 
   @IsString()

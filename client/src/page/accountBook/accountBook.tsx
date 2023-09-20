@@ -11,7 +11,7 @@ import {
 	WeeklyExpenseTotalObject,
 	WeeklyIncomeTotalObject,
 } from "../../object/accountBookObject";
-import { Category } from "../../enum/accountBook.enum";
+import { Category, Week } from "../../enum/accountBook.enum";
 
 export default function AccountBook() {
 	const history = useNavigate();
@@ -20,7 +20,8 @@ export default function AccountBook() {
 	};
 	const [weekMaxCount, setWeekMaxCount] = useState(0);
 	const [nowMonth, setNowMonth] = useState("");
-	const [weeklyAccountBook, setWeeklyAccountBook] = useState<WeeklyAccountBookObject>();
+	const [weeklyAccountBook, setWeeklyAccountBook] =
+		useState<WeeklyAccountBookObject>();
 
 	useEffect(() => {
 		fetch("/api/accountBook/currentMonthList", {
@@ -63,93 +64,113 @@ export default function AccountBook() {
 		const weeklyExpenseTotal: WeeklyExpenseTotalObject = {};
 
 		if (weeklyAccountBook.firstWeek.length > 0) {
-			if (weeklyAccountBook.firstWeek.category === Category.EXPENSE) {
-				const weeklyTotalResult = weeklyTotal(
-					weeklyAccountBook.firstWeek.map((firstWeek: AccountBookObject) =>
-						Number(firstWeek.pay)
+			const expenseTotalResult = weeklyTotal(
+				weeklyAccountBook.firstWeek
+					.filter(
+						(firstWeek: AccountBookObject) =>
+							firstWeek.category === Category.EXPENSE
 					)
-				);
-				weeklyExpenseTotal.firstWeek = weeklyTotalResult;
-			} else {
-				const weeklyTotalResult = weeklyTotal(
-					weeklyAccountBook.firstWeek.map((firstWeek: AccountBookObject) =>
-						Number(firstWeek.pay)
+					.map((firstWeek: AccountBookObject) => Number(firstWeek.pay))
+			);
+			weeklyExpenseTotal.firstWeek = expenseTotalResult;
+
+			const incomeTotalResult = weeklyTotal(
+				weeklyAccountBook.firstWeek
+					.filter(
+						(firstWeek: AccountBookObject) =>
+							firstWeek.category === Category.IMPORTATION
 					)
-				);
-				weeklyIncomeTotal.firstWeek = weeklyTotalResult;
-			}
+					.map((firstWeek: AccountBookObject) => Number(firstWeek.pay))
+			);
+			weeklyIncomeTotal.firstWeek = incomeTotalResult;
 		}
 
 		if (weeklyAccountBook.secondWeek.length > 0) {
-			if (weeklyAccountBook.secondWeek.category === Category.EXPENSE) {
-				const weeklyTotalResult = weeklyTotal(
-					weeklyAccountBook.secondWeek.map((secondWeek: AccountBookObject) =>
-						Number(secondWeek.pay)
+			const expenseTotalResult = weeklyTotal(
+				weeklyAccountBook.secondWeek
+					.filter(
+						(secondWeek: AccountBookObject) =>
+							secondWeek.category === Category.EXPENSE
 					)
-				);
-				weeklyExpenseTotal.secondWeek = weeklyTotalResult;
-			} else {
-				const weeklyTotalResult = weeklyTotal(
-					weeklyAccountBook.secondWeek.map((secondWeek: AccountBookObject) =>
-						Number(secondWeek.pay)
+					.map((secondWeek: AccountBookObject) => Number(secondWeek.pay))
+			);
+			weeklyExpenseTotal.secondWeek = expenseTotalResult;
+
+			const incomeTotalResult = weeklyTotal(
+				weeklyAccountBook.secondWeek
+					.filter(
+						(secondWeek: AccountBookObject) =>
+							secondWeek.category === Category.IMPORTATION
 					)
-				);
-				weeklyIncomeTotal.secondWeek = weeklyTotalResult;
-			}
+					.map((secondWeek: AccountBookObject) => Number(secondWeek.pay))
+			);
+			weeklyIncomeTotal.secondWeek = incomeTotalResult;
 		}
 
 		if (weeklyAccountBook.thirdWeek.length > 0) {
-			if (weeklyAccountBook.thirdWeek.category === Category.EXPENSE) {
-				const weeklyTotalResult = weeklyTotal(
-					weeklyAccountBook.thirdWeek.map((thirdWeek: AccountBookObject) =>
-						Number(thirdWeek.pay)
+			const expenseTotalResult = weeklyTotal(
+				weeklyAccountBook.thirdWeek
+					.filter(
+						(thirdWeek: AccountBookObject) =>
+							thirdWeek.category === Category.EXPENSE
 					)
-				);
-				weeklyExpenseTotal.thirdWeek = weeklyTotalResult;
-			} else {
-				const weeklyTotalResult = weeklyTotal(
-					weeklyAccountBook.thirdWeek.map((thirdWeek: AccountBookObject) =>
-						Number(thirdWeek.pay)
+					.map((thirdWeek: AccountBookObject) => Number(thirdWeek.pay))
+			);
+			weeklyExpenseTotal.thirdWeek = expenseTotalResult;
+
+			const incomeTotalResult = weeklyTotal(
+				weeklyAccountBook.thirdWeek
+					.filter(
+						(thirdWeek: AccountBookObject) =>
+							thirdWeek.category === Category.IMPORTATION
 					)
-				);
-				weeklyIncomeTotal.thirdWeek = weeklyTotalResult;
-			}
+					.map((thirdWeek: AccountBookObject) => Number(thirdWeek.pay))
+			);
+			weeklyIncomeTotal.thirdWeek = incomeTotalResult;
 		}
 
 		if (weeklyAccountBook.fourthWeek.length > 0) {
-			if (weeklyAccountBook.fourthWeek.category === Category.EXPENSE) {
-				const weeklyTotalResult = weeklyTotal(
-					weeklyAccountBook.fourthWeek.map((fourthWeek: AccountBookObject) =>
-						Number(fourthWeek.pay)
+			const expenseTotalResult = weeklyTotal(
+				weeklyAccountBook.fourthWeek
+					.filter(
+						(fourthWeek: AccountBookObject) =>
+							fourthWeek.category === Category.EXPENSE
 					)
-				);
-				weeklyExpenseTotal.fourthWeek = weeklyTotalResult;
-			} else {
-				const weeklyTotalResult = weeklyTotal(
-					weeklyAccountBook.fourthWeek.map((fourthWeek: AccountBookObject) =>
-						Number(fourthWeek.pay)
+					.map((fourthWeek: AccountBookObject) => Number(fourthWeek.pay))
+			);
+			weeklyExpenseTotal.fourthWeek = expenseTotalResult;
+
+			const incomeTotalResult = weeklyTotal(
+				weeklyAccountBook.fourthWeek
+					.filter(
+						(fourthWeek: AccountBookObject) =>
+							fourthWeek.category === Category.IMPORTATION
 					)
-				);
-				weeklyIncomeTotal.fourthWeek = weeklyTotalResult;
-			}
+					.map((fourthWeek: AccountBookObject) => Number(fourthWeek.pay))
+			);
+			weeklyIncomeTotal.fourthWeek = incomeTotalResult;
 		}
 
 		if (weeklyAccountBook.fifthWeek.length > 0) {
-			if (weeklyAccountBook.fifthWeek.category === Category.EXPENSE) {
-				const weeklyTotalResult = weeklyTotal(
-					weeklyAccountBook.fifthWeek.map((fifthWeek: AccountBookObject) =>
-						Number(fifthWeek.pay)
+			const expenseTotalResult = weeklyTotal(
+				weeklyAccountBook.fifthWeek
+					.filter(
+						(fifthWeek: AccountBookObject) =>
+							fifthWeek.category === Category.EXPENSE
 					)
-				);
-				weeklyExpenseTotal.fifthWeek = weeklyTotalResult;
-			} else {
-				const weeklyTotalResult = weeklyTotal(
-					weeklyAccountBook.fifthWeek.map((fifthWeek: AccountBookObject) =>
-						Number(fifthWeek.pay)
+					.map((fifthWeek: AccountBookObject) => Number(fifthWeek.pay))
+			);
+			weeklyExpenseTotal.fifthWeek = expenseTotalResult;
+
+			const incomeTotalResult = weeklyTotal(
+				weeklyAccountBook.fifthWeek
+					.filter(
+						(fifthWeek: AccountBookObject) =>
+							fifthWeek.category === Category.IMPORTATION
 					)
-				);
-				weeklyIncomeTotal.fifthWeek = weeklyTotalResult;
-			}
+					.map((fifthWeek: AccountBookObject) => Number(fifthWeek.pay))
+			);
+			weeklyIncomeTotal.fifthWeek = incomeTotalResult;
 		}
 
 		return {
@@ -163,10 +184,11 @@ export default function AccountBook() {
 		const calculationResult = calculationWeeklyAmounts(weeklyAccountBook);
 
 		for (let i = 0; i < weekMaxCount; i++) {
+			console.log("??? : ", weeklyAccountBook.firstWeek[i]);
 			result.push(
 				<tr key={i}>
 					<td colSpan={2}>
-						{weeklyAccountBook.firstWeek.length > 0 ? (
+						{weeklyAccountBook.firstWeek[i] !== undefined ? (
 							<>
 								<span className="dayBox">
 									{weeklyAccountBook.firstWeek[i].date.day}
@@ -207,7 +229,7 @@ export default function AccountBook() {
 						)}
 					</td>
 					<td colSpan={2}>
-						{weeklyAccountBook.secondWeek.length > 0 ? (
+						{weeklyAccountBook.secondWeek[i] !== undefined ? (
 							<>
 								<span className="dayBox">
 									{weeklyAccountBook.secondWeek[i].date.day}
@@ -248,7 +270,7 @@ export default function AccountBook() {
 						)}
 					</td>
 					<td colSpan={2}>
-						{weeklyAccountBook.thirdWeek.length > 0 ? (
+						{weeklyAccountBook.thirdWeek[i] !== undefined ? (
 							<>
 								<span className="dayBox">
 									{weeklyAccountBook.thirdWeek[i].date.day}
@@ -289,7 +311,7 @@ export default function AccountBook() {
 						)}
 					</td>
 					<td colSpan={2}>
-						{weeklyAccountBook.fourthWeek.length > 0 ? (
+						{weeklyAccountBook.fourthWeek[i] !== undefined ? (
 							<>
 								<span className="dayBox">
 									{weeklyAccountBook.fourthWeek[i].date.day}
@@ -330,7 +352,7 @@ export default function AccountBook() {
 						)}
 					</td>
 					<td colSpan={2}>
-						{weeklyAccountBook.fifthWeek.length > 0 ? (
+						{weeklyAccountBook.fifthWeek[i] !== undefined ? (
 							<>
 								<span className="dayBox">
 									{weeklyAccountBook.fifthWeek[i].date.day}
@@ -463,15 +485,27 @@ export default function AccountBook() {
 							<tbody>
 								<tr>
 									<td>총 수입</td>
-									<td>3,000,000원</td>
+									{weeklyAccountBook?.monthDetail.incomeTotal !== undefined ? (
+										<td>{weeklyAccountBook.monthDetail.incomeTotal}원</td>
+									) : (
+										<td>0원</td>
+									)}
 								</tr>
 								<tr>
 									<td>총 지출</td>
-									<td>2,800,000원</td>
+									{weeklyAccountBook?.monthDetail.expenceTotal !== undefined ? (
+										<td>{weeklyAccountBook.monthDetail.expenceTotal}원</td>
+									) : (
+										<td>0원</td>
+									)}
 								</tr>
 								<tr>
 									<td>잔액</td>
-									<td>0원</td>
+									{weeklyAccountBook?.monthDetail.balance !== undefined ? (
+										<td>{weeklyAccountBook.monthDetail.balance}원</td>
+									) : (
+										<td>0원</td>
+									)}
 								</tr>
 							</tbody>
 						</table>
