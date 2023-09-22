@@ -6,7 +6,7 @@ import { BsFillGearFill } from "react-icons/bs";
 import { TiArrowBackOutline } from "react-icons/ti";
 import { useForm } from "react-hook-form";
 import { Category } from "../../enum/accountBook.enum";
-import { getCookie } from "../../components/cookie/cookie";
+import DateSearchForm from "../../components/admin/dateSearchForm";
 
 interface CreateAccountBookObject {
 	category: Category;
@@ -25,11 +25,7 @@ export default function Admin() {
 		history("/account-book");
 	};
 
-	const {
-		register,
-		handleSubmit,
-		formState: { isSubmitting, errors },
-	} = useForm<CreateAccountBookObject>();
+	const { register, handleSubmit, reset } = useForm<CreateAccountBookObject>();
 
 	const onSubmit = (data: CreateAccountBookObject) => {
 		console.log(data);
@@ -43,9 +39,8 @@ export default function Admin() {
 			body: JSON.stringify({
 				category: data.category,
 				date: {
-					year: data.date.year,
-					month: data.date.month,
-					day: data.date.day,
+					month: Number(data.date.month),
+					day: Number(data.date.day),
 				},
 				content: data.content,
 				pay: data.pay,
@@ -54,15 +49,18 @@ export default function Admin() {
 			.then((res) => res.json())
 			.then((data) => {
 				console.log("data", data);
+				alert("정상적으로 등록되었습니다!");
+				reset();
 			})
 			.catch((error) => {
 				console.error("Error:", error);
+				alert(`제대로 등록되지 않았습니다!`);
 			});
 	};
 
 	return (
 		<div className="container">
-			<Header></Header>
+			<Header />
 			<div className="subAdminBox">
 				<div className="subTitle">
 					<BsFillGearFill className="bsFillGearFillIcon" color="#E10944" />
@@ -102,7 +100,7 @@ export default function Admin() {
 							</select>
 							<h5>일</h5>
 							<input
-								type="text"
+								type="number"
 								className="writeDate"
 								placeholder="날짜만 입력"
 								{...register("date.day", {
@@ -144,124 +142,15 @@ export default function Admin() {
 				<div className="subRightBox">
 					<div className="subExplanationBox">
 						<p>
-							기존에 등록한 가계부를 조회할 수 있습니다!<br></br>
-							최신 년도와 월로 조회되며, 직접 수정 및 삭제하여 관리해보세요!
+							현재 회원님께서 작성한 가계부의 전체 리스트 입니다.<br></br>
+							기존에 등록한 가계부의 년도&월을 아래 검색창에서 선택하여 조회하실
+							수 있습니다!
 						</p>
 					</div>
-					<div className="searchBox">
-						<select>
-							<option>--년도 선택--</option>
-							<option>2023년</option>
-						</select>
-						<select>
-							<option>--월 선택--</option>
-							<option>9월</option>
-						</select>
-						<button className="inquiryButton">조회하기</button>
-					</div>
-					<div className="searchListBox">
-						<div className="listSingleBox">
-							<h3>20</h3>
-							<p>올리브영 특가 폼클렌징 폼클렌징 폼클렌징 폼클렌징</p>
-							<span>3000원</span>
-							<button className="modifyButton">수정</button>
-							<button className="deleteButton">삭제</button>
-						</div>
-						<div className="listSingleBox">
-							<h3>20</h3>
-							<p>올리브영 특가 폼클렌징</p>
-							<span>3000원</span>
-							<button className="modifyButton">수정</button>
-							<button className="deleteButton">삭제</button>
-						</div>
-						<div className="listSingleBox">
-							<h3>20</h3>
-							<p>올리브영 특가 폼클렌징</p>
-							<span>3000원</span>
-							<button className="modifyButton">수정</button>
-							<button className="deleteButton">삭제</button>
-						</div>
-						<div className="listSingleBox">
-							<h3>20</h3>
-							<p>올리브영 특가 폼클렌징</p>
-							<span>3000원</span>
-							<button className="modifyButton">수정</button>
-							<button className="deleteButton">삭제</button>
-						</div>
-						<div className="listSingleBox">
-							<h3>20</h3>
-							<p>올리브영 특가 폼클렌징</p>
-							<span>3000원</span>
-							<button className="modifyButton">수정</button>
-							<button className="deleteButton">삭제</button>
-						</div>
-						<div className="listSingleBox">
-							<h3>20</h3>
-							<p>올리브영 특가 폼클렌징</p>
-							<span>3000원</span>
-							<button className="modifyButton">수정</button>
-							<button className="deleteButton">삭제</button>
-						</div>
-						<div className="listSingleBox">
-							<h3>20</h3>
-							<p>올리브영 특가 폼클렌징</p>
-							<span>3000원</span>
-							<button className="modifyButton">수정</button>
-							<button className="deleteButton">삭제</button>
-						</div>
-						<div className="listSingleBox">
-							<h3>20</h3>
-							<p>올리브영 특가 폼클렌징</p>
-							<span>3000원</span>
-							<button className="modifyButton">수정</button>
-							<button className="deleteButton">삭제</button>
-						</div>
-						<div className="listSingleBox">
-							<h3>20</h3>
-							<p>올리브영 특가 폼클렌징</p>
-							<span>3000원</span>
-							<button className="modifyButton">수정</button>
-							<button className="deleteButton">삭제</button>
-						</div>
-						<div className="listSingleBox">
-							<h3>20</h3>
-							<p>올리브영 특가 폼클렌징</p>
-							<span>3000원</span>
-							<button className="modifyButton">수정</button>
-							<button className="deleteButton">삭제</button>
-						</div>
-						<div className="listSingleBox">
-							<h3>20</h3>
-							<p>올리브영 특가 폼클렌징</p>
-							<span>3000원</span>
-							<button className="modifyButton">수정</button>
-							<button className="deleteButton">삭제</button>
-						</div>
-						<div className="listSingleBox">
-							<h3>20</h3>
-							<p>올리브영 특가 폼클렌징</p>
-							<span>3000원</span>
-							<button className="modifyButton">수정</button>
-							<button className="deleteButton">삭제</button>
-						</div>
-						<div className="listSingleBox">
-							<h3>20</h3>
-							<p>올리브영 특가 폼클렌징</p>
-							<span>3000원</span>
-							<button className="modifyButton">수정</button>
-							<button className="deleteButton">삭제</button>
-						</div>
-						<div className="listSingleBox">
-							<h3>20</h3>
-							<p>올리브영 특가 폼클렌징</p>
-							<span>3000원</span>
-							<button className="modifyButton">수정</button>
-							<button className="deleteButton">삭제</button>
-						</div>
-					</div>
+					<DateSearchForm />
 				</div>
 			</div>
-			<Footer></Footer>
+			<Footer />
 		</div>
 	);
 }

@@ -1,4 +1,11 @@
-import { IsEnum, IsObject, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsEnum,
+  IsNumber,
+  IsObject,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { AccountBookDate } from 'src/entity/accountBook.entity';
 import { Category } from 'src/enum/accountBook.enum';
 
@@ -7,6 +14,8 @@ export class CreateAcccountBookDto {
   category!: Category;
 
   @IsObject()
+  @ValidateNested()
+  @Type(() => AccountBookDate)
   date!: AccountBookDate;
 
   @IsString()
@@ -14,4 +23,12 @@ export class CreateAcccountBookDto {
 
   @IsString()
   pay!: string;
+}
+
+export class SearchAccountBookDto {
+  @IsNumber()
+  year: number;
+
+  @IsNumber()
+  month: number;
 }

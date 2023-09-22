@@ -1,9 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAcccountBookDto } from './admin.dto';
+import { CreateAcccountBookDto, SearchAccountBookDto } from './admin.dto';
 import { Week } from 'src/enum/accountBook.enum';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccountBook } from 'src/entity/accountBook.entity';
 import { Repository } from 'typeorm';
+import { Util } from 'src/util/util';
+
+export interface datesObject {
+  years: number[];
+  months: number[];
+  accountBooks: AccountBook[];
+}
 
 @Injectable()
 export class AdminService {
@@ -56,5 +63,47 @@ export class AdminService {
 
     const accountBook = this.accountRepository.save(accountBookObject);
     return accountBook;
+  }
+
+  async getAccountBooksAndDates(userId: string): Promise<datesObject> {
+    const accountBooks = await this.accountRepository
+      .createQueryBuilder('account_book')
+      .where({ userId: userId })
+      .orderBy(
+        "JSON_EXTRACT(date, '$.year') DESC, JSON_EXTRACT(date, '$.month') DESC, JSON_EXTRACT(date, '$.day')",
+        'DESC',
+      )
+      .getMany();
+
+    const years = accountBooks.map((date) => date.date.year);
+    const removeAndSortYearDuplicates = Util.removeAndSortDateDuplicates(years);
+
+    const months = accountBooks.map((date) => date.date.month);
+    const removeAndSortMonthDuplicates =
+      Util.removeAndSortDateDuplicates(months);
+
+    return {
+      years: removeAndSortYearDuplicates,
+      months: removeAndSortMonthDuplicates,
+      accountBooks: accountBooks,
+    };
+  }
+
+  searchAccountBooks(
+    searchAccountBook: SearchAccountBookDto,
+    userId: string,
+  ): Promise<AccountBook[]> {
+    const searchAccountBooks = this.accountRepository
+      .createQueryBuilder('account_book')
+      .where("JSON_EXTRACT(date, '$.year') = :year", {
+        year: searchAccountBook.year,
+      })
+      .andWhere("JSON_EXTRACT(date, '$.month') = :month", {
+        month: searchAccountBook.month,
+      })
+      .andWhere({ userId: userId })
+      .getMany();
+
+    return searchAccountBooks;
   }
 }

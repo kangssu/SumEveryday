@@ -1,4 +1,4 @@
-.container .subAdminBox{
+.container .subAdminBox {
     width: auto;
     height: 800px;
     background-color: #ffffff;
@@ -153,9 +153,9 @@
 
 .listSingleBox {
     border: 1px solid #f1f1f1;
-    padding: 10px;
     border-radius: 20px;
     margin: 0 10px 10px 0;
+    padding: 10px;
 }
 
 .listSingleBox h3,
@@ -168,16 +168,18 @@
 
 .listSingleBox h3 {
     color: #E10944;
-    font-size: 18px;
+    width: 70px;
 }
 
 .listSingleBox p {
     font-size: 14px;
-    width: 230px;
+    width: 190px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     font-weight: bolder;
+    position: relative;
+    top:10px;
 }
 
 .listSingleBox span {
@@ -186,6 +188,8 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 100px;
+    position: relative;
+    top:10px;
 }
 
 .listSingleBox .modifyButton {

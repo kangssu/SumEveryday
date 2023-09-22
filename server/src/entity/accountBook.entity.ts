@@ -1,4 +1,4 @@
-import { IsNumber } from 'class-validator';
+import { IsNumber, IsOptional } from 'class-validator';
 import { Category, Week } from 'src/enum/accountBook.enum';
 import {
   Column,
@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 
 export class AccountBookDate {
+  @IsOptional()
   @IsNumber()
   year?: number;
 

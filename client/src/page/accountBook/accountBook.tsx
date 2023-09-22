@@ -24,7 +24,7 @@ export default function AccountBook() {
 		useState<WeeklyAccountBookObject>();
 
 	useEffect(() => {
-		fetch("/api/accountBook/currentMonthList", {
+		fetch("/api/accountBook/currentMonths", {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -469,7 +469,7 @@ export default function AccountBook() {
 
 	return (
 		<div className="container">
-			<Header></Header>
+			<Header />
 			<div className="subBox">
 				<div className="subBoxTop">
 					<h3 className="month">{nowMonth}</h3>
@@ -538,7 +538,7 @@ export default function AccountBook() {
 					</div>
 				</div>
 			</div>
-			<Footer></Footer>
+			<Footer />
 		</div>
 	);
 }

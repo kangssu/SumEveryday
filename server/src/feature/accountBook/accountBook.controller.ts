@@ -8,12 +8,12 @@ import { JwtAuthGuard } from '../auth/guard/jwt.guard';
 export class AccountBookController {
   constructor(private readonly accountBookService: AccountBookService) {}
 
-  @Get('/accountBook/currentMonthList')
+  @Get('/accountBook/currentMonths')
   @UseGuards(JwtAuthGuard)
   getCurrentMonthAccountBookByUserId(
     @Req() req: any,
   ): Promise<weeklyAccountBook> {
-    return this.accountBookService.getCurrentMonthAccountBookByUserId(
+    return this.accountBookService.getCurrentMonthAccountBooksByUserId(
       req.user.id,
     );
   }
