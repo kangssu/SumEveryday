@@ -1,8 +1,5 @@
 import { AccountBookObject } from "../../../object/accountBookObject";
 import "./accountBookDelete.css";
-import { useState } from "react";
-import { AiFillCloseCircle } from "react-icons/ai";
-import { BsFillBellFill } from "react-icons/bs";
 
 interface modalPropType {
 	setDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,7 +10,24 @@ export default function AccountBookDelete(props: modalPropType) {
 	const closeModal = () => {
 		props.setDeleteModalOpen(false);
 	};
-	console.log("/////////////////////////////////", props.clickedAccountBook);
+
+	const onSubmit = (id: number) => {
+		fetch(`/api/accountBook/${id}`, {
+			method: "DELETE",
+			headers: {
+				"Content-type": "application/json",
+				Authorization: `Bearer ${sessionStorage.getItem("access-token")}`,
+			},
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				console.log("data", data);
+				window.location.reload();
+			})
+			.catch((error) => {
+				console.error("Error:", error);
+			});
+	};
 
 	return (
 		<div className="modalBackgound" onClick={closeModal}>
@@ -28,7 +42,12 @@ export default function AccountBookDelete(props: modalPropType) {
 						<br />위 내역을 삭제하면 다시 원복할 수 없습니다.
 					</p>
 				</div>
-				<button className="deleteButton">삭제</button>
+				<button
+					className="deleteButton"
+					onClick={() => onSubmit(props.clickedAccountBook?.no || 0)}
+				>
+					삭제
+				</button>
 				<button className="closeButton" onClick={closeModal}>
 					취소
 				</button>

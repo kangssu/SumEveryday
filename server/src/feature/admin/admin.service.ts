@@ -107,9 +107,7 @@ export class AdminService {
     return searchAccountBooks;
   }
 
-  deleteAccountBook(id: number) {
-    const nowDate = new Date().getDate;
-    console.log('/////////', nowDate);
-    console.log('/////////1 : ', id);
+  deleteAccountBook(id: number): Promise<AccountBook> {
+    return this.accountRepository.softRemove({ no: id });
   }
 }

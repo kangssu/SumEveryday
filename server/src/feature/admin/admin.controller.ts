@@ -13,6 +13,7 @@ import { AdminService, datesObject } from './admin.service';
 import { CreateAcccountBookDto, SearchAccountBookDto } from './admin.dto';
 import { AccountBook } from 'src/entity/accountBook.entity';
 import { JwtAuthGuard } from '../auth/guard/jwt.guard';
+import { ApiResult } from 'src/error/apiResult';
 
 @UseGuards(JwtAuthGuard)
 @Controller({
@@ -46,7 +47,12 @@ export class AdminController {
   }
 
   @Delete('accountBook/:id')
-  deleteAccountBook(@Param('id', ParseIntPipe) id) {
-    return this.adminService.deleteAccountBook(id);
+  async deleteAccountBook(
+    @Param('id', ParseIntPipe) id,
+  ): Promise<ApiResult<AccountBook>> {
+    return {
+      success: true,
+      data: await this.adminService.deleteAccountBook(id),
+    };
   }
 }
