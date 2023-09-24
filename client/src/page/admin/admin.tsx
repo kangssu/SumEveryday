@@ -4,7 +4,7 @@ import Header from "../../components/layout/header";
 import "./admin.css";
 import { BsFillGearFill } from "react-icons/bs";
 import { TiArrowBackOutline } from "react-icons/ti";
-import { useForm } from "react-hook-form";
+import { FieldErrors, useForm } from "react-hook-form";
 import { Category } from "../../enum/accountBook.enum";
 import DateSearchForm from "../../components/admin/dateSearchForm";
 
@@ -25,7 +25,12 @@ export default function Admin() {
 		history("/account-book");
 	};
 
-	const { register, handleSubmit, reset } = useForm<CreateAccountBookObject>();
+	const {
+		register,
+		handleSubmit,
+		reset,
+		formState: { errors },
+	} = useForm<CreateAccountBookObject>();
 
 	const onSubmit = (data: CreateAccountBookObject) => {
 		console.log(data);
@@ -58,6 +63,41 @@ export default function Admin() {
 			});
 	};
 
+	const conbineErrorMessages = (
+		errors: FieldErrors<CreateAccountBookObject>
+	) => {
+		const errorTypes = [];
+		if (errors.date?.month !== undefined) {
+			errorTypes.push("월");
+		}
+		if (errors.date?.day !== undefined) {
+			errorTypes.push("일");
+		}
+
+		if (errors.category !== undefined) {
+			errorTypes.push("수입/지출");
+		}
+		if (errors.pay !== undefined) {
+			errorTypes.push("가격");
+		}
+		if (errors.content !== undefined) {
+			errorTypes.push("내용");
+		}
+
+		const combineErrorTypes = errorTypes.join(", ");
+		if (errorTypes.length > 0) {
+			return (
+				<div className="adminErrorMessage">
+					📌 {combineErrorTypes}의 값들은 전부 필수 입력 해야합니다!
+					<br />
+					📌 또한 일, 가격 항목은 숫자로만 기입해야 합니다.
+				</div>
+			);
+		}
+
+		return null;
+	};
+
 	return (
 		<div className="container">
 			<Header />
@@ -82,6 +122,10 @@ export default function Admin() {
 							<select
 								{...register("date.month", {
 									required: "월은 필수 선택입니다.",
+									pattern: {
+										value: /^[0-9]+$/,
+										message: "월을 선택해주세요!",
+									},
 								})}
 							>
 								<option>--선택--</option>
@@ -105,18 +149,27 @@ export default function Admin() {
 								placeholder="날짜만 입력"
 								{...register("date.day", {
 									required: "날짜는 필수 입력입니다.",
+									pattern: {
+										value: /^[0-9]+$/,
+										message: "날짜는 숫자로만 입력해주세요!",
+									},
 								})}
 							/>
 							<h5>수입/지출</h5>
 							<select
 								{...register("category", {
 									required: "카테고리는 필수 선택입니다.",
+									pattern: {
+										value: /^[가-힣]*$/,
+										message: "카테고리를 선택해주세요!",
+									},
 								})}
 							>
 								<option>--선택--</option>
-								<option>수입</option>
-								<option>지출</option>
+								<option value={"수입"}>수입</option>
+								<option value={"지출"}>지출</option>
 							</select>
+
 							<h5>가격</h5>
 							<input
 								type="text"
@@ -124,6 +177,10 @@ export default function Admin() {
 								placeholder="금액을 작성해주세요."
 								{...register("pay", {
 									required: "금액은 필수 입력입니다.",
+									pattern: {
+										value: /^[0-9]+$/,
+										message: "금액은 숫자로만 입력해주세요!",
+									},
 								})}
 							/>
 							<h5>내용</h5>
@@ -136,6 +193,7 @@ export default function Admin() {
 								})}
 							/>
 						</div>
+						{conbineErrorMessages(errors)}
 						<button className="writeFinishButton">작성 완료</button>
 					</form>
 				</div>

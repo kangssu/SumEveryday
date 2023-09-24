@@ -166,12 +166,12 @@
     margin: 5px;
 }
 
-.listSingleBox h3 {
+.listSingleBox .listDate {
     color: #E10944;
     width: 70px;
 }
 
-.listSingleBox p {
+.listSingleBox .listContent {
     font-size: 14px;
     width: 190px;
     overflow: hidden;
@@ -179,7 +179,7 @@
     white-space: nowrap;
     font-weight: bolder;
     position: relative;
-    top:10px;
+    top: 10px;
 }
 
 .listSingleBox span {
@@ -189,7 +189,7 @@
     white-space: nowrap;
     width: 100px;
     position: relative;
-    top:10px;
+    top: 10px;
 }
 
 .listSingleBox .modifyButton {
@@ -210,4 +210,9 @@
     width: 70px;
     height: 30px;
     cursor: pointer;
+}
+
+.adminErrorMessage{
+    margin-top:20px;
+    color: red;
 }

@@ -106,4 +106,10 @@ export class AdminService {
 
     return searchAccountBooks;
   }
+
+  deleteAccountBook(id: number) {
+    const nowDate = new Date().getDate;
+    console.log('/////////', nowDate);
+    console.log('/////////1 : ', id);
+  }
 }
