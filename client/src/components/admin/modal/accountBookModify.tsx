@@ -1,1 +1,186 @@
-export default function AccountBookModify() {}
+import { FieldErrors, UseFormReset, useForm } from "react-hook-form";
+import "./accountBookModify.css";
+import { AccountBookObject } from "../../../object/accountBookObject";
+import { dateObject } from "../../../object/adminObject";
+
+interface modalPropType {
+	setModifyModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	clickedAccountBook?: AccountBookObject;
+	reset: UseFormReset<dateObject>;
+}
+
+export default function AccountBookModify(props: modalPropType) {
+	const closeModal = () => {
+		props.setModifyModalOpen(false);
+	};
+
+	const {
+		register,
+		handleSubmit,
+		reset,
+		formState: { errors },
+	} = useForm<AccountBookObject>();
+
+	const onSubmit = (data: AccountBookObject) => {
+		console.log(data);
+
+		fetch(`/api/accountBook${data.no}`, {
+			method: "PATCH",
+			headers: {
+				"Content-type": "application/json",
+				Authorization: `Bearer ${sessionStorage.getItem("access-token")}`,
+			},
+			body: JSON.stringify({
+				category: data.category,
+				date: {
+					month: Number(data.date.month),
+					day: Number(data.date.day),
+				},
+				content: data.content,
+				pay: data.pay,
+			}),
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				console.log("data", data);
+				alert("정상적으로 등록되었습니다!");
+				reset();
+				window.location.reload();
+			})
+			.catch((error) => {
+				console.error("Error:", error);
+				alert(`제대로 등록되지 않았습니다!`);
+			});
+	};
+
+	const conbineErrorMessages = (errors: FieldErrors<AccountBookObject>) => {
+		const errorTypes = [];
+		if (errors.date?.month !== undefined) {
+			errorTypes.push("월");
+		}
+		if (errors.date?.day !== undefined) {
+			errorTypes.push("일");
+		}
+
+		if (errors.category !== undefined) {
+			errorTypes.push("수입/지출");
+		}
+		if (errors.pay !== undefined) {
+			errorTypes.push("가격");
+		}
+		if (errors.content !== undefined) {
+			errorTypes.push("내용");
+		}
+
+		const combineErrorTypes = errorTypes.join(", ");
+		if (errorTypes.length > 0) {
+			return (
+				<div className="adminErrorMessage">
+					📌 {combineErrorTypes}의 값들은 전부 필수 입력 해야합니다!
+					<br />
+					📌 또한 일, 가격 항목은 숫자로만 기입해야 합니다.
+				</div>
+			);
+		}
+
+		return null;
+	};
+
+	return (
+		<div className="modalBackgound">
+			<div className="modifyModalBox">
+				<h3 className="modalTitle">수정하시겠습니까?</h3>
+				<div className="modalContent">
+					<p>
+						원하시는 항목을 수정할 수 있습니다.
+						<br />
+						다만, 년도는 자동 등록으로 수정할 수 없습니다.
+					</p>
+				</div>
+				<form onSubmit={handleSubmit(onSubmit)}>
+					<div className="modifyBox">
+						<h5>월</h5>
+						<select
+							{...register("date.month", {
+								required: "월은 필수 선택입니다.",
+								pattern: {
+									value: /^[0-9]+$/,
+									message: "월을 선택해주세요!",
+								},
+							})}
+						>
+							<option>--선택--</option>
+							<option value={1}>1월</option>
+							<option value={2}>2월</option>
+							<option value={3}>3월</option>
+							<option value={4}>4월</option>
+							<option value={5}>5월</option>
+							<option value={6}>6월</option>
+							<option value={7}>7월</option>
+							<option value={8}>8월</option>
+							<option value={9}>9월</option>
+							<option value={10}>10월</option>
+							<option value={11}>11월</option>
+							<option value={12}>12월</option>
+						</select>
+						<h5>일</h5>
+						<input
+							type="number"
+							className="modifyDate"
+							placeholder="날짜만 입력"
+							{...register("date.day", {
+								required: "날짜는 필수 입력입니다.",
+								pattern: {
+									value: /^[0-9]+$/,
+									message: "날짜는 숫자로만 입력해주세요!",
+								},
+							})}
+						/>
+						<h5>수입/지출</h5>
+						<select
+							{...register("category", {
+								required: "카테고리는 필수 선택입니다.",
+								pattern: {
+									value: /^[가-힣]*$/,
+									message: "카테고리를 선택해주세요!",
+								},
+							})}
+						>
+							<option>--선택--</option>
+							<option value={"수입"}>수입</option>
+							<option value={"지출"}>지출</option>
+						</select>
+
+						<h5>가격</h5>
+						<input
+							type="text"
+							className="modifyPay"
+							placeholder="금액을 작성해주세요."
+							{...register("pay", {
+								required: "금액은 필수 입력입니다.",
+								pattern: {
+									value: /^[0-9]+$/,
+									message: "금액은 숫자로만 입력해주세요!",
+								},
+							})}
+						/>
+						<h5>내용</h5>
+						<input
+							type="text"
+							className="modifyContent"
+							placeholder="간략한 내용을 작성해주세요."
+							{...register("content", {
+								required: "간략한 내용은 필수 입력입니다.",
+							})}
+						/>
+					</div>
+				</form>
+				{conbineErrorMessages(errors)}
+				<button className="modifyButton">수정</button>
+				<button className="closeButton" onClick={closeModal}>
+					취소
+				</button>
+			</div>
+		</div>
+	);
+}

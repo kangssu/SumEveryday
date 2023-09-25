@@ -212,7 +212,29 @@
     cursor: pointer;
 }
 
-.adminErrorMessage{
-    margin-top:20px;
+.adminErrorMessage {
+    margin-top: 20px;
     color: red;
+}
+
+.searchNoneListBox {
+    border: 1px solid #f1f1f1;
+    border-radius: 15px;
+    margin: 30px 10px 10px 0;
+    padding: 30px 15px;
+    font-size: 14px;
+    text-align: center;
+    color: #E10944;
+}
+
+.plusPayBox {
+    color: #E10944;
+    font-size: 16px;
+    font-weight: bolder;
+}
+
+.minusPayBox {
+    color: #5b5b5b;
+    font-size: 16px;
+    font-weight: bolder;
 }

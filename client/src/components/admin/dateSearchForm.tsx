@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { dateListObject, dateObject } from "../../object/adminObject";
 import { FieldErrors, useForm } from "react-hook-form";
 import { AccountBookObject } from "../../object/accountBookObject";
+import { AiFillPlusSquare } from "react-icons/ai";
+import { AiFillMinusSquare } from "react-icons/ai";
+import { Category } from "../../enum/accountBook.enum";
+import AccountBookModify from "./modal/accountBookModify";
 import AccountBookDelete from "./modal/accountBookDelete";
 
 export default function DateSearchForm() {
@@ -9,15 +13,22 @@ export default function DateSearchForm() {
 	const {
 		register,
 		handleSubmit,
+		reset,
 		formState: { errors },
 	} = useForm<dateObject>();
 	const [listByDate, setListByDate] = useState([]);
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+	const [modifyModalOpen, setModifyModalOpen] = useState(false);
 	const [clickedAccountBook, setClickedAccountBook] =
 		useState<AccountBookObject>();
 
-	const showModal = (data: AccountBookObject) => {
+	const deleteShowModal = (data: AccountBookObject) => {
 		setDeleteModalOpen(true);
+		setClickedAccountBook(data);
+	};
+
+	const modifyShowModal = (data: AccountBookObject) => {
+		setModifyModalOpen(true);
 		setClickedAccountBook(data);
 	};
 
@@ -115,32 +126,71 @@ export default function DateSearchForm() {
 							</option>
 						))}
 					</select>
-
 					<button className="inquiryButton">조회하기</button>
 				</form>
 			</div>
 			{conbineErrorMessages(errors)}
-			<div className="searchListBox">
-				{listByDate.map((list: AccountBookObject) => (
-					<div className="listSingleBox" key={list.no}>
-						<h3 className="listDate">
-							{list.date.year}.{list.date.month}.{list.date.day}
-						</h3>
-						<p className="listContent">{list.content}</p>
-						<span>{list.pay}원</span>
-						<button className="modifyButton">수정</button>
-						<button className="deleteButton" onClick={() => showModal(list)}>
-							삭제
-						</button>
-						{deleteModalOpen && (
-							<AccountBookDelete
-								setDeleteModalOpen={setDeleteModalOpen}
-								clickedAccountBook={clickedAccountBook}
-							/>
-						)}
-					</div>
-				))}
-			</div>
+			{listByDate.length > 0 ? (
+				<div className="searchListBox">
+					{listByDate.map((list: AccountBookObject) => (
+						<div className="listSingleBox" key={list.no}>
+							<h3 className="listDate">
+								{list.date.year}.{list.date.month}.{list.date.day}
+							</h3>
+							<p className="listContent">{list.content}</p>
+							{list.category === Category.IMPORTATION ? (
+								<span className="plusPayBox">
+									<AiFillPlusSquare
+										fontSize="16px"
+										color="#E10944"
+										className="plusAndMinusIcon"
+									/>
+									{list.pay.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
+								</span>
+							) : (
+								<span className="minusPayBox">
+									<AiFillMinusSquare
+										fontSize="16px"
+										color="#5b5b5b"
+										className="plusAndMinusIcon"
+									/>
+									{list.pay.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
+								</span>
+							)}
+							<button
+								className="modifyButton"
+								onClick={() => modifyShowModal(list)}
+							>
+								수정
+							</button>
+							{modifyModalOpen && (
+								<AccountBookModify
+									setModifyModalOpen={setModifyModalOpen}
+									clickedAccountBook={clickedAccountBook}
+									reset={reset}
+								/>
+							)}
+							<button
+								className="deleteButton"
+								onClick={() => deleteShowModal(list)}
+							>
+								삭제
+							</button>
+							{deleteModalOpen && (
+								<AccountBookDelete
+									setDeleteModalOpen={setDeleteModalOpen}
+									clickedAccountBook={clickedAccountBook}
+									reset={reset}
+								/>
+							)}
+						</div>
+					))}
+				</div>
+			) : (
+				<div className="searchNoneListBox">
+					아직 등록된 내역이 없습니다! 😭😭😭
+				</div>
+			)}
 		</>
 	);
 }

@@ -48,11 +48,9 @@ export default function Join({ setJoinModalOpen }: modalPropType) {
 				console.log("data", data);
 				if (data.idErrorMessage === ErrorCode.USER_ID_DUPLICATE) {
 					setIdDuplicateError("아이디가 중복입니다.");
-					console.log("1. idDuplicateError", idDuplicateError);
 				}
 				if (data.nicknameErrorMessage === ErrorCode.USER_NICKNAME_DUPLICATE) {
 					setNicknameDuplicateError("닉네임이 중복입니다.");
-					console.log("2. nicknameDuplicateError", nicknameDuplicateError);
 				}
 				if (
 					data.idErrorMessage === undefined &&

@@ -1,9 +1,12 @@
-import { AccountBookObject } from "../../../object/accountBookObject";
+import { UseFormReset } from "react-hook-form";
 import "./accountBookDelete.css";
+import { AccountBookObject } from "../../../object/accountBookObject";
+import { dateObject } from "../../../object/adminObject";
 
 interface modalPropType {
 	setDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	clickedAccountBook?: AccountBookObject;
+	reset: UseFormReset<dateObject>;
 }
 
 export default function AccountBookDelete(props: modalPropType) {
@@ -22,6 +25,7 @@ export default function AccountBookDelete(props: modalPropType) {
 			.then((res) => res.json())
 			.then((data) => {
 				console.log("data", data);
+				props.reset();
 				window.location.reload();
 			})
 			.catch((error) => {
@@ -34,7 +38,7 @@ export default function AccountBookDelete(props: modalPropType) {
 			<div className="deleteModalBox">
 				<h3 className="modalTitle">삭제하시겠습니까?</h3>
 				<div className="modalContent">
-					<p>
+					<p className="modalNoticeContent">
 						📌 {props.clickedAccountBook?.date.year}.
 						{props.clickedAccountBook?.date.month}.
 						{props.clickedAccountBook?.date.day}{" "}

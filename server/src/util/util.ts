@@ -1,4 +1,5 @@
 import { AccountBook } from 'src/entity/accountBook.entity';
+import { Week } from 'src/enum/accountBook.enum';
 
 export class Util {
   static setReduce(total: number) {
@@ -18,5 +19,23 @@ export class Util {
       return b - a;
     });
     return dateSort;
+  }
+  static CalculateWeek(year: number, month: number, day: number) {
+    const resetDate = new Date(year, month, 1);
+    const firstDay = resetDate.getDay();
+    const calculationWeek = Math.ceil((Number(day) + firstDay) / 7);
+
+    switch (calculationWeek) {
+      case 1:
+        return Week.THE_FIRST_WEEK;
+      case 2:
+        return Week.THE_SECOND_WEEK;
+      case 3:
+        return Week.THE_THIRD_WEEK;
+      case 4:
+        return Week.THE_FOURTH_WEEK;
+      case 5:
+        return Week.THE_FIFTH_WEEK;
+    }
   }
 }

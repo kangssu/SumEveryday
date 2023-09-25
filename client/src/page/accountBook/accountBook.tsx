@@ -33,7 +33,6 @@ export default function AccountBook() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				console.log("제대로 전부 가져오는지 확인 : ", data);
 				setWeeklyAccountBook(data);
 				setNowMonth(data.currentMonth);
 				const firstWeekCount = data.firstWeek.length;
@@ -184,7 +183,6 @@ export default function AccountBook() {
 		const calculationResult = calculationWeeklyAmounts(weeklyAccountBook);
 
 		for (let i = 0; i < weekMaxCount; i++) {
-			console.log("??? : ", weeklyAccountBook.firstWeek[i]);
 			result.push(
 				<tr key={i}>
 					<td colSpan={2}>
@@ -196,7 +194,8 @@ export default function AccountBook() {
 								<span className="dayContentBox">
 									{weeklyAccountBook.firstWeek[i].content}
 								</span>
-								{weeklyAccountBook.firstWeek[i].category === "수입" ? (
+								{weeklyAccountBook.firstWeek[i].category ===
+								Category.IMPORTATION ? (
 									<span className="plusPayBox">
 										<AiFillPlusSquare
 											fontSize="16px"

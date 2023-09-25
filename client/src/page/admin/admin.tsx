@@ -7,17 +7,7 @@ import { TiArrowBackOutline } from "react-icons/ti";
 import { FieldErrors, useForm } from "react-hook-form";
 import { Category } from "../../enum/accountBook.enum";
 import DateSearchForm from "../../components/admin/dateSearchForm";
-
-interface CreateAccountBookObject {
-	category: Category;
-	date: {
-		year: number;
-		month: number;
-		day: number;
-	};
-	content: string;
-	pay: string;
-}
+import { AccountBookObject } from "../../object/accountBookObject";
 
 export default function Admin() {
 	const history = useNavigate();
@@ -30,9 +20,9 @@ export default function Admin() {
 		handleSubmit,
 		reset,
 		formState: { errors },
-	} = useForm<CreateAccountBookObject>();
+	} = useForm<AccountBookObject>();
 
-	const onSubmit = (data: CreateAccountBookObject) => {
+	const onSubmit = (data: AccountBookObject) => {
 		console.log(data);
 
 		fetch(`/api/accountBook/create`, {
@@ -56,6 +46,7 @@ export default function Admin() {
 				console.log("data", data);
 				alert("정상적으로 등록되었습니다!");
 				reset();
+				window.location.reload();
 			})
 			.catch((error) => {
 				console.error("Error:", error);
@@ -63,9 +54,7 @@ export default function Admin() {
 			});
 	};
 
-	const conbineErrorMessages = (
-		errors: FieldErrors<CreateAccountBookObject>
-	) => {
+	const conbineErrorMessages = (errors: FieldErrors<AccountBookObject>) => {
 		const errorTypes = [];
 		if (errors.date?.month !== undefined) {
 			errorTypes.push("월");

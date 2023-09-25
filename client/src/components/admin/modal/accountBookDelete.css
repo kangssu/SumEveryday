@@ -5,7 +5,6 @@
   bottom: 0;
   right: 0;
   background-color: rgba(0, 0, 0, 0.1);
-
 }
 
 .deleteModalBox {
@@ -32,10 +31,9 @@
 .modalContent {
   margin-bottom: 10px;
   font-size: 14px;
-
 }
 
-.modalContent p {
+.modalContent .modalNoticeContent {
   line-height: 2;
 }
 

@@ -3,6 +3,7 @@ import {
   IsEnum,
   IsNumber,
   IsObject,
+  IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
@@ -23,6 +24,26 @@ export class CreateAcccountBookDto {
 
   @IsString()
   pay!: string;
+}
+
+export class UpdateAccountBookDto {
+  @IsOptional()
+  @IsEnum(Category)
+  category?: Category;
+
+  @IsOptional()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => AccountBookDate)
+  date?: AccountBookDate;
+
+  @IsOptional()
+  @IsString()
+  content?: string;
+
+  @IsOptional()
+  @IsString()
+  pay?: string;
 }
 
 export class SearchAccountBookDto {
