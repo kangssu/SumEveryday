@@ -109,7 +109,6 @@ export default function DateSearchForm() {
 							</option>
 						))}
 					</select>
-
 					<select
 						{...register("month", {
 							required: "월은 필수 선택입니다.",
@@ -163,28 +162,29 @@ export default function DateSearchForm() {
 							>
 								수정
 							</button>
-							{modifyModalOpen && (
-								<AccountBookModify
-									setModifyModalOpen={setModifyModalOpen}
-									clickedAccountBook={clickedAccountBook}
-									reset={reset}
-								/>
-							)}
+
 							<button
 								className="deleteButton"
 								onClick={() => deleteShowModal(list)}
 							>
 								삭제
 							</button>
-							{deleteModalOpen && (
-								<AccountBookDelete
-									setDeleteModalOpen={setDeleteModalOpen}
-									clickedAccountBook={clickedAccountBook}
-									reset={reset}
-								/>
-							)}
 						</div>
 					))}
+					{modifyModalOpen && (
+						<AccountBookModify
+							setModifyModalOpen={setModifyModalOpen}
+							clickedAccountBook={clickedAccountBook}
+							reset={reset}
+						/>
+					)}
+					{deleteModalOpen && (
+						<AccountBookDelete
+							setDeleteModalOpen={setDeleteModalOpen}
+							clickedAccountBook={clickedAccountBook}
+							reset={reset}
+						/>
+					)}
 				</div>
 			) : (
 				<div className="searchNoneListBox">

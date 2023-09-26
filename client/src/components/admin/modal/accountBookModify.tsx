@@ -19,12 +19,19 @@ export default function AccountBookModify(props: modalPropType) {
 		handleSubmit,
 		reset,
 		formState: { errors },
-	} = useForm<AccountBookObject>();
+	} = useForm<AccountBookObject>({
+		defaultValues: {
+			date: props.clickedAccountBook?.date,
+			category: props.clickedAccountBook?.category,
+			pay: props.clickedAccountBook?.pay,
+			content: props.clickedAccountBook?.content,
+		},
+	});
 
 	const onSubmit = (data: AccountBookObject) => {
-		console.log(data);
+		console.log("data : ", data);
 
-		fetch(`/api/accountBook${data.no}`, {
+		fetch(`/api/accountBook/${props.clickedAccountBook?.no}`, {
 			method: "PATCH",
 			headers: {
 				"Content-type": "application/json",
@@ -43,7 +50,7 @@ export default function AccountBookModify(props: modalPropType) {
 			.then((res) => res.json())
 			.then((data) => {
 				console.log("data", data);
-				alert("정상적으로 등록되었습니다!");
+				alert("정상적으로 수정 되었습니다!");
 				reset();
 				window.location.reload();
 			})
@@ -94,7 +101,7 @@ export default function AccountBookModify(props: modalPropType) {
 					<p>
 						원하시는 항목을 수정할 수 있습니다.
 						<br />
-						다만, 년도는 자동 등록으로 수정할 수 없습니다.
+						다만, 년도는 자동 등록이므로 수정할 수 없습니다.
 					</p>
 				</div>
 				<form onSubmit={handleSubmit(onSubmit)}>
@@ -150,7 +157,6 @@ export default function AccountBookModify(props: modalPropType) {
 							<option value={"수입"}>수입</option>
 							<option value={"지출"}>지출</option>
 						</select>
-
 						<h5>가격</h5>
 						<input
 							type="text"
@@ -174,12 +180,14 @@ export default function AccountBookModify(props: modalPropType) {
 							})}
 						/>
 					</div>
+					{conbineErrorMessages(errors)}
+					<button className="modifyButton" type="submit">
+						수정
+					</button>
+					<button className="closeButton" onClick={closeModal}>
+						취소
+					</button>
 				</form>
-				{conbineErrorMessages(errors)}
-				<button className="modifyButton">수정</button>
-				<button className="closeButton" onClick={closeModal}>
-					취소
-				</button>
 			</div>
 		</div>
 	);

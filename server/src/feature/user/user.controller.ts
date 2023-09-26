@@ -1,7 +1,6 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UserErrorMessageObject } from './user.dto';
-import { JwtAuthGuard } from '../auth/guard/jwt.guard';
 import { ErrorCode } from 'src/enum/errorCode.enum';
 
 @Controller({
@@ -33,13 +32,5 @@ export class UserController {
 
     await this.userService.createUser(createUserDto);
     return userDuplicateErrorMessageObject;
-  }
-
-  // 여기 임시! 다시 확인해야함
-  @UseGuards(JwtAuthGuard)
-  @Get('/test')
-  async getProfile(@Req() req: any) {
-    const user = req.user;
-    return user;
   }
 }

@@ -126,6 +126,10 @@ export class AccountBookService {
     return accountBook;
   }
 
+  getAccountBookById(id: number) {
+    return this.accountBookRepository.findOne({ where: { no: id } });
+  }
+
   async getAccountBooksAndDatesByUserId(userId: string): Promise<datesObject> {
     const accountBooks = await this.accountBookRepository
       .createQueryBuilder('account_book')

@@ -27,6 +27,10 @@ export class AdminService {
     );
   }
 
+  getAccountBookById(id: number) {
+    return this.accountBookService.getAccountBookById(id);
+  }
+
   getAccountBooksAndDatesByUserId(userId: string): Promise<datesObject> {
     return this.accountBookService.getAccountBooksAndDatesByUserId(userId);
   }

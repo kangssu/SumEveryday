@@ -1,16 +1,17 @@
+
 .modalBackgound {
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .deleteModalBox {
   justify-content: center;
   width: 380px;
-  height: 200px;
+  height: 190px;
   z-index: 999;
   position: absolute;
   top: calc(50vh - 100px);
@@ -23,7 +24,7 @@
 }
 
 .modalTitle {
-  padding: 30px 0 10px 0;
+  padding: 30px 0 20px 0;
   color: #E10944;
   font-size: 16px;
 }
@@ -35,6 +36,7 @@
 
 .modalContent .modalNoticeContent {
   line-height: 2;
+  margin-bottom: 20px;
 }
 
 .deleteModalBox .deleteButton {
@@ -45,6 +47,7 @@
   width: 70px;
   height: 30px;
   cursor: pointer;
+  margin-right: 10px;
 }
 
 .deleteModalBox .closeButton {

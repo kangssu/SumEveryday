@@ -12,6 +12,7 @@ import {
 	WeeklyIncomeTotalObject,
 } from "../../object/accountBookObject";
 import { Category, Week } from "../../enum/accountBook.enum";
+import React from "react";
 
 export default function AccountBook() {
 	const history = useNavigate();
@@ -33,6 +34,7 @@ export default function AccountBook() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
+				console.log("확인 : ", data);
 				setWeeklyAccountBook(data);
 				setNowMonth(data.currentMonth);
 				const firstWeekCount = data.firstWeek.length;
@@ -396,8 +398,8 @@ export default function AccountBook() {
 		}
 
 		result.push(
-			<>
-				<tr key={weeklyAccountBook.currentMonth}>
+			<React.Fragment key={100}>
+				<tr>
 					<td>주간 수입</td>
 					{calculationResult.weeklyIncomeTotal.firstWeek !== undefined ? (
 						<td>{calculationResult.weeklyIncomeTotal.firstWeek}원</td>
@@ -461,7 +463,7 @@ export default function AccountBook() {
 						<td>0원</td>
 					)}
 				</tr>
-			</>
+			</React.Fragment>
 		);
 		return result;
 	};

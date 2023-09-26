@@ -39,7 +39,7 @@ export class AdminController {
   }
 
   @Get('/accountBook/date')
-  getAccountBookDatesByUserId(@Req() req: any): Promise<datesObject> {
+  getAccountBooksAndDatesByUserId(@Req() req: any): Promise<datesObject> {
     return this.adminService.getAccountBooksAndDatesByUserId(req.user.id);
   }
 
@@ -56,15 +56,15 @@ export class AdminController {
 
   @Patch('/accountBook/:id')
   updateAccountBookById(
-    @Param('id', ParseIntPipe) id,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateAccountBook: UpdateAccountBookDto,
   ): Promise<AccountBook> {
     return this.adminService.updateAccountBookById(id, updateAccountBook);
   }
 
-  @Delete('accountBook/:id')
+  @Delete('/accountBook/:id')
   async deleteAccountBookById(
-    @Param('id', ParseIntPipe) id,
+    @Param('id', ParseIntPipe) id: number,
   ): Promise<ApiResult<AccountBook>> {
     return {
       success: true,
