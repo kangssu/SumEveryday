@@ -1,12 +1,10 @@
-import { FieldErrors, UseFormReset, useForm } from "react-hook-form";
+import { FieldErrors, useForm } from "react-hook-form";
 import "./accountBookModify.css";
 import { AccountBookObject } from "../../../object/accountBookObject";
-import { dateObject } from "../../../object/adminObject";
 
 interface modalPropType {
 	setModifyModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	clickedAccountBook?: AccountBookObject;
-	reset: UseFormReset<dateObject>;
 }
 
 export default function AccountBookModify(props: modalPropType) {
@@ -50,9 +48,14 @@ export default function AccountBookModify(props: modalPropType) {
 			.then((res) => res.json())
 			.then((data) => {
 				console.log("data", data);
-				alert("정상적으로 수정 되었습니다!");
-				reset();
-				window.location.reload();
+				if (!data.success && data.statusCode === 404) {
+					reset();
+					alert(`${data.message}`);
+				} else {
+					alert("정상적으로 수정되었습니다!");
+					reset();
+					window.location.reload();
+				}
 			})
 			.catch((error) => {
 				console.error("Error:", error);

@@ -10,6 +10,8 @@ import {
   UpdateAccountBookDto,
 } from '../admin/admin.dto';
 import { datesObject } from '../admin/admin.service';
+import { ErrorCode } from 'src/enum/errorCode.enum';
+import { CustomException } from 'src/error/customException';
 
 export interface weeklyAccountBook {
   currentMonth: number;
@@ -87,9 +89,9 @@ export class AccountBookService {
       fourthWeek: fourthWeek,
       fifthWeek: fifthWeek,
       monthDetail: {
-        incomeTotal: Util.setReduce(incomeTotal),
-        expenceTotal: Util.setReduce(expenceTotal),
-        balance: Util.setReduce(balance),
+        incomeTotal: String(incomeTotal),
+        expenceTotal: String(expenceTotal),
+        balance: String(balance),
       },
     };
   }
@@ -102,16 +104,17 @@ export class AccountBookService {
     createAccountBookDto.date.year = now.getFullYear();
 
     const originPay = createAccountBookDto.pay;
-    createAccountBookDto.pay = originPay.replace(
-      /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gim,
-      '',
-    );
+    createAccountBookDto.pay = Util.removeExceptNumber(originPay);
 
-    const weekResult = Util.CalculateWeek(
+    const weekResult = Util.calculateWeek(
       now.getFullYear(),
-      createAccountBookDto.date.month - 1,
+      createAccountBookDto.date.month,
       createAccountBookDto.date.day,
     );
+
+    if (!weekResult) {
+      throw new CustomException(ErrorCode.NON_EXISTENT_DAY, 404);
+    }
 
     const accountBookObject = {
       userId: userId,
@@ -124,10 +127,6 @@ export class AccountBookService {
 
     const accountBook = this.accountBookRepository.save(accountBookObject);
     return accountBook;
-  }
-
-  getAccountBookById(id: number) {
-    return this.accountBookRepository.findOne({ where: { no: id } });
   }
 
   async getAccountBooksAndDatesByUserId(userId: string): Promise<datesObject> {
@@ -166,26 +165,32 @@ export class AccountBookService {
     if (updateAccountBookDto.date.month) {
       accountBook.date.month = updateAccountBookDto.date.month;
 
-      accountBook.week = Util.CalculateWeek(
+      accountBook.week = Util.calculateWeek(
         now.getFullYear(),
-        updateAccountBookDto.date.month - 1,
+        updateAccountBookDto.date.month,
         accountBook.date.day,
       );
     }
     if (updateAccountBookDto.date.day) {
       accountBook.date.day = updateAccountBookDto.date.day;
 
-      accountBook.week = Util.CalculateWeek(
+      const weekResult = Util.calculateWeek(
         now.getFullYear(),
-        accountBook.date.month - 1,
+        accountBook.date.month,
         updateAccountBookDto.date.day,
       );
+
+      if (!weekResult) {
+        throw new CustomException(ErrorCode.NON_EXISTENT_DAY, 404);
+      }
+
+      accountBook.week = weekResult;
     }
     if (updateAccountBookDto.category) {
       accountBook.category = updateAccountBookDto.category;
     }
     if (updateAccountBookDto.pay) {
-      accountBook.pay = updateAccountBookDto.pay;
+      accountBook.pay = Util.removeExceptNumber(updateAccountBookDto.pay);
     }
     if (updateAccountBookDto.content) {
       accountBook.content = updateAccountBookDto.content;
@@ -196,7 +201,7 @@ export class AccountBookService {
     return updateAccountBook;
   }
 
-  searchAccountBooksByUserId(
+  searchAccountBooksByDateAndUserId(
     searchAccountBook: SearchAccountBookDto,
     userId: string,
   ): Promise<AccountBook[]> {

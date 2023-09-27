@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Post,
-  Req,
   UseGuards,
   Delete,
   Patch,
@@ -19,6 +18,8 @@ import {
 import { AccountBook } from 'src/entity/accountBook.entity';
 import { JwtAuthGuard } from '../auth/guard/jwt.guard';
 import { ApiResult } from 'src/error/apiResult';
+import { UserInfo } from 'src/decorator/userDecorator';
+import { User } from 'src/entity/user.entity';
 
 @UseGuards(JwtAuthGuard)
 @Controller({
@@ -28,29 +29,34 @@ export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
   @Post('/accountBook/create')
-  createAccountBook(
+  async createAccountBook(
     @Body() createAccountBookDto: CreateAcccountBookDto,
-    @Req() req: any,
-  ): Promise<AccountBook> {
-    return this.adminService.createAccountBook(
-      createAccountBookDto,
-      req.user.id,
-    );
+    @UserInfo() user: User,
+  ): Promise<ApiResult<AccountBook>> {
+    return {
+      success: true,
+      data: await this.adminService.createAccountBook(
+        createAccountBookDto,
+        user.id,
+      ),
+    };
   }
 
   @Get('/accountBook/date')
-  getAccountBooksAndDatesByUserId(@Req() req: any): Promise<datesObject> {
-    return this.adminService.getAccountBooksAndDatesByUserId(req.user.id);
+  getAccountBooksAndDatesByUserId(
+    @UserInfo() user: User,
+  ): Promise<datesObject> {
+    return this.adminService.getAccountBooksAndDatesByUserId(user.id);
   }
 
   @Post('/accountBook/search')
-  searchAccountBooksByUserId(
-    @Body() searchAccountBook: SearchAccountBookDto,
-    @Req() req: any,
+  searchAccountBooksByDateAndUserId(
+    @Body() searchAccountBookDto: SearchAccountBookDto,
+    @UserInfo() user: User,
   ): Promise<AccountBook[]> {
-    return this.adminService.searchAccountBooksByUserId(
-      searchAccountBook,
-      req.user.id,
+    return this.adminService.searchAccountBooksByDateAndUserId(
+      searchAccountBookDto,
+      user.id,
     );
   }
 

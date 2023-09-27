@@ -43,9 +43,14 @@ export default function Admin() {
 			.then((res) => res.json())
 			.then((data) => {
 				console.log("data", data);
-				alert("정상적으로 등록되었습니다!");
-				reset();
-				window.location.reload();
+				if (!data.success && data.statusCode === 404) {
+					reset();
+					alert(`${data.message}`);
+				} else {
+					alert("정상적으로 등록되었습니다!");
+					reset();
+					window.location.reload();
+				}
 			})
 			.catch((error) => {
 				console.error("Error:", error);
@@ -82,7 +87,6 @@ export default function Admin() {
 				</div>
 			);
 		}
-
 		return null;
 	};
 

@@ -4,11 +4,15 @@ import { FieldErrors, useForm } from "react-hook-form";
 import { AccountBookObject } from "../../object/accountBookObject";
 import { AiFillPlusSquare } from "react-icons/ai";
 import { AiFillMinusSquare } from "react-icons/ai";
+import { GrPowerReset } from "react-icons/gr";
 import { Category } from "../../enum/accountBook.enum";
 import AccountBookModify from "./modal/accountBookModify";
 import AccountBookDelete from "./modal/accountBookDelete";
 
 export default function DateSearchForm() {
+	const refresh = () => {
+		window.location.reload();
+	};
 	const [date, setDate] = useState<dateListObject>();
 	const {
 		register,
@@ -16,6 +20,7 @@ export default function DateSearchForm() {
 		reset,
 		formState: { errors },
 	} = useForm<dateObject>();
+
 	const [listByDate, setListByDate] = useState([]);
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 	const [modifyModalOpen, setModifyModalOpen] = useState(false);
@@ -92,7 +97,7 @@ export default function DateSearchForm() {
 	return (
 		<>
 			<div className="searchBox">
-				<form onSubmit={handleSubmit(onSubmit)}>
+				<form onSubmit={handleSubmit(onSubmit)} className="searchFromBox">
 					<select
 						{...register("year", {
 							required: "년도는 필수 선택입니다.",
@@ -127,6 +132,9 @@ export default function DateSearchForm() {
 					</select>
 					<button className="inquiryButton">조회하기</button>
 				</form>
+				<button className="resetButton" onClick={refresh}>
+					<GrPowerReset className="grPowerReset" />
+				</button>
 			</div>
 			{conbineErrorMessages(errors)}
 			{listByDate.length > 0 ? (
@@ -175,7 +183,6 @@ export default function DateSearchForm() {
 						<AccountBookModify
 							setModifyModalOpen={setModifyModalOpen}
 							clickedAccountBook={clickedAccountBook}
-							reset={reset}
 						/>
 					)}
 					{deleteModalOpen && (

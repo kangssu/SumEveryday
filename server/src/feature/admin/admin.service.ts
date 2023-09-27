@@ -27,10 +27,6 @@ export class AdminService {
     );
   }
 
-  getAccountBookById(id: number) {
-    return this.accountBookService.getAccountBookById(id);
-  }
-
   getAccountBooksAndDatesByUserId(userId: string): Promise<datesObject> {
     return this.accountBookService.getAccountBooksAndDatesByUserId(userId);
   }
@@ -45,11 +41,11 @@ export class AdminService {
     );
   }
 
-  searchAccountBooksByUserId(
+  searchAccountBooksByDateAndUserId(
     searchAccountBook: SearchAccountBookDto,
     userId: string,
   ): Promise<AccountBook[]> {
-    return this.accountBookService.searchAccountBooksByUserId(
+    return this.accountBookService.searchAccountBooksByDateAndUserId(
       searchAccountBook,
       userId,
     );

@@ -2,10 +2,6 @@ import { AccountBook } from 'src/entity/accountBook.entity';
 import { Week } from 'src/enum/accountBook.enum';
 
 export class Util {
-  static setReduce(total: number) {
-    return String(total).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  }
-
   static calculateByMonth(accountBooks: AccountBook[], category: string) {
     return accountBooks
       .filter((week) => week.category === category)
@@ -20,22 +16,35 @@ export class Util {
     });
     return dateSort;
   }
-  static CalculateWeek(year: number, month: number, day: number) {
-    const resetDate = new Date(year, month, 1);
-    const firstDay = resetDate.getDay();
-    const calculationWeek = Math.ceil((Number(day) + firstDay) / 7);
 
-    switch (calculationWeek) {
-      case 1:
-        return Week.THE_FIRST_WEEK;
-      case 2:
-        return Week.THE_SECOND_WEEK;
-      case 3:
-        return Week.THE_THIRD_WEEK;
-      case 4:
-        return Week.THE_FOURTH_WEEK;
-      case 5:
-        return Week.THE_FIFTH_WEEK;
+  static removeExceptNumber(pay: string) {
+    return pay.replace('[^0-9]', '');
+  }
+
+  static calculateWeek(year: number, month: number, day: number) {
+    const lastDate = new Date(year, month, 0);
+    const lastDay = lastDate.getDate();
+
+    if (lastDay > day) {
+      const resetDate = new Date(year, month - 1, 1);
+      const firstDay = resetDate.getDay();
+      const calculationWeek = Math.ceil((Number(day) + firstDay) / 7);
+
+      switch (calculationWeek) {
+        case 1:
+          return Week.THE_FIRST_WEEK;
+        case 2:
+          return Week.THE_SECOND_WEEK;
+        case 3:
+          return Week.THE_THIRD_WEEK;
+        case 4:
+          return Week.THE_FOURTH_WEEK;
+        case 5:
+        case 6:
+          return Week.THE_FIFTH_WEEK;
+      }
+    } else {
+      return null;
     }
   }
 }

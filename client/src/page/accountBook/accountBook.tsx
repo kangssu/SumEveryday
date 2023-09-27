@@ -11,7 +11,7 @@ import {
 	WeeklyExpenseTotalObject,
 	WeeklyIncomeTotalObject,
 } from "../../object/accountBookObject";
-import { Category, Week } from "../../enum/accountBook.enum";
+import { Category } from "../../enum/accountBook.enum";
 import React from "react";
 
 export default function AccountBook() {
@@ -25,7 +25,7 @@ export default function AccountBook() {
 		useState<WeeklyAccountBookObject>();
 
 	useEffect(() => {
-		fetch("/api/accountBook/currentMonths", {
+		fetch("/api/accountBook/currentMonth", {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -487,7 +487,13 @@ export default function AccountBook() {
 								<tr>
 									<td>총 수입</td>
 									{weeklyAccountBook?.monthDetail.incomeTotal !== undefined ? (
-										<td>{weeklyAccountBook.monthDetail.incomeTotal}원</td>
+										<td>
+											{weeklyAccountBook.monthDetail.incomeTotal.replace(
+												/\B(?=(\d{3})+(?!\d))/g,
+												","
+											)}
+											원
+										</td>
 									) : (
 										<td>0원</td>
 									)}
@@ -495,7 +501,13 @@ export default function AccountBook() {
 								<tr>
 									<td>총 지출</td>
 									{weeklyAccountBook?.monthDetail.expenceTotal !== undefined ? (
-										<td>{weeklyAccountBook.monthDetail.expenceTotal}원</td>
+										<td>
+											{weeklyAccountBook.monthDetail.expenceTotal.replace(
+												/\B(?=(\d{3})+(?!\d))/g,
+												","
+											)}
+											원
+										</td>
 									) : (
 										<td>0원</td>
 									)}
@@ -503,7 +515,13 @@ export default function AccountBook() {
 								<tr>
 									<td>잔액</td>
 									{weeklyAccountBook?.monthDetail.balance !== undefined ? (
-										<td>{weeklyAccountBook.monthDetail.balance}원</td>
+										<td>
+											{weeklyAccountBook.monthDetail.balance.replace(
+												/\B(?=(\d{3})+(?!\d))/g,
+												","
+											)}
+											원
+										</td>
 									) : (
 										<td>0원</td>
 									)}

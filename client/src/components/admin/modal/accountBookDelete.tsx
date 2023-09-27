@@ -10,7 +10,6 @@ interface modalPropType {
 }
 
 export default function AccountBookDelete(props: modalPropType) {
-	console.log("///////////////////", props.clickedAccountBook?.no);
 	const closeModal = () => {
 		props.setDeleteModalOpen(false);
 	};
