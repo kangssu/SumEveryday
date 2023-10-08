@@ -1,6 +1,7 @@
 import "./accountBook.css";
 import { AiFillPlusSquare } from "react-icons/ai";
 import { AiFillMinusSquare } from "react-icons/ai";
+import { AiOutlineSearch } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import Header from "../../components/layout/header";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +14,7 @@ import {
 } from "../../object/accountBookObject";
 import { Category } from "../../enum/accountBook.enum";
 import React from "react";
+import { dateListObject } from "../../object/adminObject";
 
 export default function AccountBook() {
 	const history = useNavigate();
@@ -23,6 +25,7 @@ export default function AccountBook() {
 	const [nowMonth, setNowMonth] = useState("");
 	const [weeklyAccountBook, setWeeklyAccountBook] =
 		useState<WeeklyAccountBookObject>();
+	const [date, setDate] = useState<dateListObject>();
 
 	useEffect(() => {
 		fetch("/api/accountBook/currentMonth", {
@@ -52,6 +55,21 @@ export default function AccountBook() {
 						fifthWeekCount
 					)
 				);
+			});
+	}, []);
+
+	useEffect(() => {
+		fetch("/api/accountBook/date", {
+			method: "GET",
+			headers: {
+				"Content-type": "application/json",
+				Authorization: `Bearer ${sessionStorage.getItem("access-token")}`,
+			},
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				console.log("1. data : ", data);
+				setDate(data);
 			});
 	}, []);
 
@@ -475,11 +493,31 @@ export default function AccountBook() {
 				<div className="subBoxTop">
 					<h3 className="month">{nowMonth}</h3>
 					<p>월의 기록</p>
+					<div className="accountBookDateSearchBox">
+						<select className="accoutBookYearSelectBox">
+							<option>--년도 선택--</option>
+							{date?.years.map((year: number) => (
+								<option key={year} value={year}>
+									{year}년
+								</option>
+							))}
+						</select>
+						<select className="accoutBookMonthSelectBox">
+							<option>--월 선택--</option>
+							{date?.months.map((month: number) => (
+								<option key={month} value={month}>
+									{month}월
+								</option>
+							))}
+						</select>
+						<button className="accountBookSearchButton">
+							<AiOutlineSearch className="searchIconButton" />
+						</button>
+					</div>
 					<div className="buttonBox">
 						<button className="writeButton" onClick={goAdmin}>
 							가계부 관리
 						</button>
-						<button className="calendarButton">달력보기</button>
 					</div>
 					<div className="totalTableBox">
 						<table>

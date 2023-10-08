@@ -30,13 +30,52 @@
     padding: 60px 0 0 5px;
 }
 
-.buttonBox {
-    margin-left: 650px;
+.buttonBox,
+.accountBookDateSearchBox,
+.totalTableBox {
+    float: left;
 }
 
-.buttonBox .writeButton,
-.buttonBox .calendarButton {
-    float: left;
+.accountBookDateSearchBox {
+    border: 1px solid #E10944;
+    border-radius: 40px;
+    padding: 10px;
+    margin-top: 54px;
+    margin-left: 320px;
+    background-color: #ffffff;
+    position: relative;
+    width: 260px;
+}
+
+.accountBookDateSearchBox .accoutBookYearSelectBox {
+    margin-left: 10px;
+}
+
+.accountBookDateSearchBox .accoutBookYearSelectBox,
+.accountBookDateSearchBox .accoutBookMonthSelectBox {
+    margin-right: 10px;
+    border-radius: 20px;
+    border: none;
+    background-color: #f7f7f7;
+    width: 100px;
+}
+
+.accountBookDateSearchBox .accountBookSearchButton {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.searchIconButton {
+    color: #E10944;
+    font-size: 20px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.buttonBox .writeButton {
     border: 1px solid #E10944;
     border-radius: 40px;
     width: 110px;
@@ -57,7 +96,6 @@
 }
 
 .totalTableBox table {
-    float: left;
     border-radius: 8px;
     border-collapse: collapse;
     border-radius: 10px;
