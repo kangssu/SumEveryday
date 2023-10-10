@@ -222,7 +222,7 @@
     margin-right: 5px;
 }
 
-.refreshBox{
+.refreshBox {
     position: relative;
 }
 
@@ -237,5 +237,11 @@
     font-size: 18px;
     position: absolute;
     transform: translateY(-80%);
-    margin-left:260px;
+    margin-left: 260px;
+}
+
+.accountBookErrorMessage {
+    position: absolute;
+    margin: 100px 0 0 460px;
+    color: red;
 }

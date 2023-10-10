@@ -546,7 +546,7 @@ export default function AccountBook() {
 		const combineErrorTypes = errorTypes.join(", ");
 		if (errorTypes.length > 0) {
 			return (
-				<div className="adminErrorMessage">
+				<div className="accountBookErrorMessage">
 					📌 {combineErrorTypes}의 값들은 전부 필수 선택 해야합니다!
 				</div>
 			);
