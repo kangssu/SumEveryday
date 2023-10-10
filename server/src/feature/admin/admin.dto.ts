@@ -1,7 +1,6 @@
 import { Type } from 'class-transformer';
 import {
   IsEnum,
-  IsNumber,
   IsObject,
   IsOptional,
   IsString,
@@ -44,12 +43,4 @@ export class UpdateAccountBookDto {
   @IsOptional()
   @IsString()
   pay?: string;
-}
-
-export class SearchAccountBookDto {
-  @IsNumber()
-  year: number;
-
-  @IsNumber()
-  month: number;
 }

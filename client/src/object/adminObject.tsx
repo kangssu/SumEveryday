@@ -1,6 +1,6 @@
 import { AccountBookObject } from "./accountBookObject";
 
-export interface dateListObject {
+export interface AllAcountBookObject {
 	years: number[];
 	months: number[];
 	accountBooks: AccountBookObject[];

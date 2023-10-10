@@ -2,30 +2,42 @@ import "./accountBook.css";
 import { AiFillPlusSquare } from "react-icons/ai";
 import { AiFillMinusSquare } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
+import { GrPowerReset } from "react-icons/gr";
 import { useEffect, useState } from "react";
 import Header from "../../components/layout/header";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../components/layout/footer";
 import {
 	AccountBookObject,
-	WeeklyAccountBookObject,
+	FinancialRecordsObject,
 	WeeklyExpenseTotalObject,
 	WeeklyIncomeTotalObject,
 } from "../../object/accountBookObject";
 import { Category } from "../../enum/accountBook.enum";
 import React from "react";
-import { dateListObject } from "../../object/adminObject";
+import { AllAcountBookObject, dateObject } from "../../object/adminObject";
+import { FieldErrors, useForm } from "react-hook-form";
 
 export default function AccountBook() {
 	const history = useNavigate();
 	const goAdmin = () => {
 		history("/admin");
 	};
+	const refresh = () => {
+		window.location.reload();
+	};
+
+	const {
+		register,
+		handleSubmit,
+		reset,
+		formState: { errors },
+	} = useForm<dateObject>();
 	const [weekMaxCount, setWeekMaxCount] = useState(0);
 	const [nowMonth, setNowMonth] = useState("");
 	const [weeklyAccountBook, setWeeklyAccountBook] =
-		useState<WeeklyAccountBookObject>();
-	const [date, setDate] = useState<dateListObject>();
+		useState<FinancialRecordsObject>();
+	const [date, setDate] = useState<AllAcountBookObject>();
 
 	useEffect(() => {
 		fetch("/api/accountBook/currentMonth", {
@@ -59,7 +71,7 @@ export default function AccountBook() {
 	}, []);
 
 	useEffect(() => {
-		fetch("/api/accountBook/date", {
+		fetch("/api/accountBook", {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -72,6 +84,42 @@ export default function AccountBook() {
 				setDate(data);
 			});
 	}, []);
+
+	const onSubmit = (data: dateObject) => {
+		fetch("/api/accountBook/search", {
+			method: "POST",
+			headers: {
+				"Content-type": "application/json",
+				Authorization: `Bearer ${sessionStorage.getItem("access-token")}`,
+			},
+			body: JSON.stringify({
+				year: Number(data.year),
+				month: Number(data.month),
+			}),
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				reset();
+				console.log("2. data : ", data);
+				setWeeklyAccountBook(data);
+				setNowMonth(data.currentMonth);
+				const firstWeekCount = data.firstWeek.length;
+				const secondWeekCount = data.secondWeek.length;
+				const thirdWeekCount = data.thirdWeek.length;
+				const fourthWeekCount = data.fourthWeek.length;
+				const fifthWeekCount = data.fifthWeek.length;
+
+				setWeekMaxCount(
+					Math.max(
+						firstWeekCount,
+						secondWeekCount,
+						thirdWeekCount,
+						fourthWeekCount,
+						fifthWeekCount
+					)
+				);
+			});
+	};
 
 	const weeklyTotal = (pay: number[]) => {
 		const total = pay.reduce((total: number, pay: number) => total + pay, 0);
@@ -486,6 +534,27 @@ export default function AccountBook() {
 		return result;
 	};
 
+	const conbineErrorMessages = (errors: FieldErrors<dateObject>) => {
+		const errorTypes = [];
+		if (errors.year !== undefined) {
+			errorTypes.push("년도");
+		}
+		if (errors.month !== undefined) {
+			errorTypes.push("월");
+		}
+
+		const combineErrorTypes = errorTypes.join(", ");
+		if (errorTypes.length > 0) {
+			return (
+				<div className="adminErrorMessage">
+					📌 {combineErrorTypes}의 값들은 전부 필수 선택 해야합니다!
+				</div>
+			);
+		}
+
+		return null;
+	};
+
 	return (
 		<div className="container">
 			<Header />
@@ -494,25 +563,50 @@ export default function AccountBook() {
 					<h3 className="month">{nowMonth}</h3>
 					<p>월의 기록</p>
 					<div className="accountBookDateSearchBox">
-						<select className="accoutBookYearSelectBox">
-							<option>--년도 선택--</option>
-							{date?.years.map((year: number) => (
-								<option key={year} value={year}>
-									{year}년
-								</option>
-							))}
-						</select>
-						<select className="accoutBookMonthSelectBox">
-							<option>--월 선택--</option>
-							{date?.months.map((month: number) => (
-								<option key={month} value={month}>
-									{month}월
-								</option>
-							))}
-						</select>
-						<button className="accountBookSearchButton">
-							<AiOutlineSearch className="searchIconButton" />
-						</button>
+						<form onSubmit={handleSubmit(onSubmit)}>
+							<select
+								{...register("year", {
+									required: "년도는 필수 선택입니다.",
+									pattern: {
+										value: /^[0-9]+$/,
+										message: "년도를 선택해주세요!",
+									},
+								})}
+								className="accoutBookYearSelectBox"
+							>
+								<option>--년도 선택--</option>
+								{date?.years.map((year: number) => (
+									<option key={year} value={year}>
+										{year}년
+									</option>
+								))}
+							</select>
+							<select
+								{...register("month", {
+									required: "월은 필수 선택입니다.",
+									pattern: {
+										value: /^[0-9]+$/,
+										message: "월을 선택해주세요!",
+									},
+								})}
+								className="accoutBookMonthSelectBox"
+							>
+								<option>--월 선택--</option>
+								{date?.months.map((month: number) => (
+									<option key={month} value={month}>
+										{month}월
+									</option>
+								))}
+							</select>
+							<button className="accountBookSearchButton">
+								<AiOutlineSearch className="searchIconButton" />
+							</button>
+						</form>
+						<div className="refreshBox">
+							<button className="refreshButton" onClick={refresh}>
+								<GrPowerReset className="grPowerRefresh" />
+							</button>
+						</div>
 					</div>
 					<div className="buttonBox">
 						<button className="writeButton" onClick={goAdmin}>
@@ -524,9 +618,9 @@ export default function AccountBook() {
 							<tbody>
 								<tr>
 									<td>총 수입</td>
-									{weeklyAccountBook?.monthDetail.incomeTotal !== undefined ? (
+									{weeklyAccountBook?.incomeTotal !== undefined ? (
 										<td>
-											{weeklyAccountBook.monthDetail.incomeTotal.replace(
+											{weeklyAccountBook.incomeTotal.replace(
 												/\B(?=(\d{3})+(?!\d))/g,
 												","
 											)}
@@ -538,9 +632,9 @@ export default function AccountBook() {
 								</tr>
 								<tr>
 									<td>총 지출</td>
-									{weeklyAccountBook?.monthDetail.expenceTotal !== undefined ? (
+									{weeklyAccountBook?.expenceTotal !== undefined ? (
 										<td>
-											{weeklyAccountBook.monthDetail.expenceTotal.replace(
+											{weeklyAccountBook.expenceTotal.replace(
 												/\B(?=(\d{3})+(?!\d))/g,
 												","
 											)}
@@ -552,9 +646,9 @@ export default function AccountBook() {
 								</tr>
 								<tr>
 									<td>잔액</td>
-									{weeklyAccountBook?.monthDetail.balance !== undefined ? (
+									{weeklyAccountBook?.balance !== undefined ? (
 										<td>
-											{weeklyAccountBook.monthDetail.balance.replace(
+											{weeklyAccountBook.balance.replace(
 												/\B(?=(\d{3})+(?!\d))/g,
 												","
 											)}
@@ -568,6 +662,7 @@ export default function AccountBook() {
 						</table>
 					</div>
 				</div>
+				{conbineErrorMessages(errors)}
 				<div className="subBoxBottom">
 					<div className="weekTableBox">
 						<table>

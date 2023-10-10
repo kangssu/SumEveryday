@@ -6,25 +6,23 @@ import { Util } from 'src/util/util';
 import { Repository } from 'typeorm';
 import {
   CreateAcccountBookDto,
-  SearchAccountBookDto,
   UpdateAccountBookDto,
 } from '../admin/admin.dto';
-import { datesObject } from '../admin/admin.service';
+import { AllAcountBookObject } from '../admin/admin.service';
 import { ErrorCode } from 'src/enum/errorCode.enum';
 import { CustomException } from 'src/error/customException';
+import { SearchAccountBookDto } from '../search/search.dto';
 
-export interface weeklyAccountBook {
+export interface FinancialRecordsObject {
   currentMonth: number;
   firstWeek: AccountBook[];
   secondWeek: AccountBook[];
   thirdWeek: AccountBook[];
   fourthWeek: AccountBook[];
   fifthWeek: AccountBook[];
-  monthDetail: {
-    incomeTotal: string;
-    expenceTotal: string;
-    balance: string;
-  };
+  incomeTotal: string;
+  expenceTotal: string;
+  balance: string;
 }
 
 @Injectable()
@@ -33,68 +31,6 @@ export class AccountBookService {
     @InjectRepository(AccountBook)
     private readonly accountBookRepository: Repository<AccountBook>,
   ) {}
-
-  async getCurrentMonthAccountBooksByUserId(
-    userId: string,
-  ): Promise<weeklyAccountBook> {
-    const month = new Date().getMonth() + 1;
-
-    const accountBooks = await this.accountBookRepository
-      .createQueryBuilder('account_book')
-      .where({ userId: userId })
-      .andWhere("JSON_EXTRACT(date, '$.month') = :month", {
-        month,
-      })
-      .orderBy("JSON_EXTRACT(date, '$.day')")
-      .getMany();
-
-    const firstWeek = [];
-    const secondWeek = [];
-    const thirdWeek = [];
-    const fourthWeek = [];
-    const fifthWeek = [];
-
-    for (const accountBook of accountBooks) {
-      switch (accountBook.week) {
-        case Week.THE_FIRST_WEEK:
-          firstWeek.push(accountBook);
-          break;
-        case Week.THE_SECOND_WEEK:
-          secondWeek.push(accountBook);
-          break;
-        case Week.THE_THIRD_WEEK:
-          thirdWeek.push(accountBook);
-          break;
-        case Week.THE_FOURTH_WEEK:
-          fourthWeek.push(accountBook);
-          break;
-        case Week.THE_FIFTH_WEEK:
-          fifthWeek.push(accountBook);
-          break;
-      }
-    }
-
-    const incomeTotal = Util.calculateByMonth(
-      accountBooks,
-      Category.IMPORTATION,
-    );
-    const expenceTotal = Util.calculateByMonth(accountBooks, Category.EXPENSE);
-    const balance = incomeTotal - expenceTotal;
-
-    return {
-      currentMonth: month,
-      firstWeek: firstWeek,
-      secondWeek: secondWeek,
-      thirdWeek: thirdWeek,
-      fourthWeek: fourthWeek,
-      fifthWeek: fifthWeek,
-      monthDetail: {
-        incomeTotal: String(incomeTotal),
-        expenceTotal: String(expenceTotal),
-        balance: String(balance),
-      },
-    };
-  }
 
   createAccountBook(
     createAccountBookDto: CreateAcccountBookDto,
@@ -129,7 +65,32 @@ export class AccountBookService {
     return accountBook;
   }
 
-  async getAccountBooksAndDatesByUserId(userId: string): Promise<datesObject> {
+  async getCurrentMonthWeeklyAccountBooksAndTotalByUserId(
+    userId: string,
+  ): Promise<FinancialRecordsObject> {
+    const month = new Date().getMonth() + 1;
+
+    const currentMonthAccountBooks = await this.accountBookRepository
+      .createQueryBuilder('account_book')
+      .where({ userId: userId })
+      .andWhere("JSON_EXTRACT(date, '$.month') = :month", {
+        month,
+      })
+      .orderBy("JSON_EXTRACT(date, '$.day')")
+      .getMany();
+
+    const currentMonthWeeklyAccountBooksAndTotal =
+      this.divideAccountBookByWeekAndCalculateMonthlyTotal(
+        month,
+        currentMonthAccountBooks,
+      );
+
+    return currentMonthWeeklyAccountBooksAndTotal;
+  }
+
+  async getAllAccountBooksAndDatesByUserId(
+    userId: string,
+  ): Promise<AllAcountBookObject> {
     const accountBooks = await this.accountBookRepository
       .createQueryBuilder('account_book')
       .where({ userId: userId })
@@ -201,17 +162,45 @@ export class AccountBookService {
     return updateAccountBook;
   }
 
-  searchAccountBooksByDateAndUserId(
-    searchAccountBook: SearchAccountBookDto,
+  deleteAccountBookById(id: number): Promise<AccountBook> {
+    return this.accountBookRepository.softRemove({ no: id });
+  }
+
+  async searchWeeklyAccountBooksAndTotalByUserIdAndDate(
+    searchAccountBookDto: SearchAccountBookDto,
+    userId: string,
+  ): Promise<FinancialRecordsObject> {
+    const accountBooks = await this.accountBookRepository
+      .createQueryBuilder('account_book')
+      .where("JSON_EXTRACT(date, '$.year') = :year", {
+        year: searchAccountBookDto.year,
+      })
+      .andWhere("JSON_EXTRACT(date, '$.month') = :month", {
+        month: searchAccountBookDto.month,
+      })
+      .andWhere({ userId: userId })
+      .getMany();
+
+    const weeklyAccountBooksAndTotal =
+      this.divideAccountBookByWeekAndCalculateMonthlyTotal(
+        searchAccountBookDto.month,
+        accountBooks,
+      );
+
+    return weeklyAccountBooksAndTotal;
+  }
+
+  searchAccountBooksByUserIdAndDate(
+    searchAccountBookDto: SearchAccountBookDto,
     userId: string,
   ): Promise<AccountBook[]> {
     const searchAccountBooks = this.accountBookRepository
       .createQueryBuilder('account_book')
       .where("JSON_EXTRACT(date, '$.year') = :year", {
-        year: searchAccountBook.year,
+        year: searchAccountBookDto.year,
       })
       .andWhere("JSON_EXTRACT(date, '$.month') = :month", {
-        month: searchAccountBook.month,
+        month: searchAccountBookDto.month,
       })
       .andWhere({ userId: userId })
       .getMany();
@@ -219,7 +208,53 @@ export class AccountBookService {
     return searchAccountBooks;
   }
 
-  deleteAccountBookById(id: number): Promise<AccountBook> {
-    return this.accountBookRepository.softRemove({ no: id });
+  async divideAccountBookByWeekAndCalculateMonthlyTotal(
+    month: number,
+    accountBooks: AccountBook[],
+  ): Promise<FinancialRecordsObject> {
+    const firstWeek = [];
+    const secondWeek = [];
+    const thirdWeek = [];
+    const fourthWeek = [];
+    const fifthWeek = [];
+
+    for (const accountBook of accountBooks) {
+      switch (accountBook.week) {
+        case Week.THE_FIRST_WEEK:
+          firstWeek.push(accountBook);
+          break;
+        case Week.THE_SECOND_WEEK:
+          secondWeek.push(accountBook);
+          break;
+        case Week.THE_THIRD_WEEK:
+          thirdWeek.push(accountBook);
+          break;
+        case Week.THE_FOURTH_WEEK:
+          fourthWeek.push(accountBook);
+          break;
+        case Week.THE_FIFTH_WEEK:
+          fifthWeek.push(accountBook);
+          break;
+      }
+    }
+
+    const incomeTotal = Util.calculateByMonth(
+      accountBooks,
+      Category.IMPORTATION,
+    );
+    const expenceTotal = Util.calculateByMonth(accountBooks, Category.EXPENSE);
+    const balance = incomeTotal - expenceTotal;
+
+    return {
+      currentMonth: month,
+      firstWeek: firstWeek,
+      secondWeek: secondWeek,
+      thirdWeek: thirdWeek,
+      fourthWeek: fourthWeek,
+      fifthWeek: fifthWeek,
+      incomeTotal: String(incomeTotal),
+      expenceTotal: String(expenceTotal),
+      balance: String(balance),
+    };
   }
 }

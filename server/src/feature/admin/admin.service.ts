@@ -1,13 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import {
-  CreateAcccountBookDto,
-  SearchAccountBookDto,
-  UpdateAccountBookDto,
-} from './admin.dto';
+import { CreateAcccountBookDto, UpdateAccountBookDto } from './admin.dto';
 import { AccountBook } from 'src/entity/accountBook.entity';
 import { AccountBookService } from '../accountBook/accountBook.service';
+import { SearchAccountBookDto } from '../search/search.dto';
 
-export interface datesObject {
+export interface AllAcountBookObject {
   years: number[];
   months: number[];
   accountBooks: AccountBook[];
@@ -27,8 +24,10 @@ export class AdminService {
     );
   }
 
-  getAccountBooksAndDatesByUserId(userId: string): Promise<datesObject> {
-    return this.accountBookService.getAccountBooksAndDatesByUserId(userId);
+  getAllAccountBooksAndDatesByUserId(
+    userId: string,
+  ): Promise<AllAcountBookObject> {
+    return this.accountBookService.getAllAccountBooksAndDatesByUserId(userId);
   }
 
   async updateAccountBookById(
@@ -41,17 +40,17 @@ export class AdminService {
     );
   }
 
-  searchAccountBooksByDateAndUserId(
-    searchAccountBook: SearchAccountBookDto,
-    userId: string,
-  ): Promise<AccountBook[]> {
-    return this.accountBookService.searchAccountBooksByDateAndUserId(
-      searchAccountBook,
-      userId,
-    );
-  }
-
   deleteAccountBookById(id: number): Promise<AccountBook> {
     return this.accountBookService.deleteAccountBookById(id);
+  }
+
+  searchAccountBooksByUserIdAndDate(
+    searchAccountBookDto: SearchAccountBookDto,
+    userId: string,
+  ): Promise<AccountBook[]> {
+    return this.accountBookService.searchAccountBooksByUserIdAndDate(
+      searchAccountBookDto,
+      userId,
+    );
   }
 }

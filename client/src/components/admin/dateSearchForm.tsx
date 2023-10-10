@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { dateListObject, dateObject } from "../../object/adminObject";
+import { AllAcountBookObject, dateObject } from "../../object/adminObject";
 import { FieldErrors, useForm } from "react-hook-form";
 import { AccountBookObject } from "../../object/accountBookObject";
 import { AiFillPlusSquare } from "react-icons/ai";
@@ -13,7 +13,7 @@ export default function DateSearchForm() {
 	const refresh = () => {
 		window.location.reload();
 	};
-	const [date, setDate] = useState<dateListObject>();
+	const [date, setDate] = useState<AllAcountBookObject>();
 	const {
 		register,
 		handleSubmit,
@@ -38,7 +38,7 @@ export default function DateSearchForm() {
 	};
 
 	useEffect(() => {
-		fetch("/api/accountBook/date", {
+		fetch("/api/accountBook", {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -55,7 +55,7 @@ export default function DateSearchForm() {
 
 	const onSubmit = (data: dateObject) => {
 		setListByDate([]);
-		fetch("/api/accountBook/search", {
+		fetch("/api/accountBook/admin/search", {
 			method: "POST",
 			headers: {
 				"Content-type": "application/json",

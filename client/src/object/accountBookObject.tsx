@@ -34,16 +34,14 @@ export interface AccountBookObject {
 	deletedAt: Date;
 }
 
-export interface WeeklyAccountBookObject {
+export interface FinancialRecordsObject {
 	currentMonth: number;
 	firstWeek: AccountBookObject[];
 	secondWeek: AccountBookObject[];
 	thirdWeek: AccountBookObject[];
 	fourthWeek: AccountBookObject[];
 	fifthWeek: AccountBookObject[];
-	monthDetail: {
-		incomeTotal: string;
-		expenceTotal: string;
-		balance: string;
-	  }
-  }
+	incomeTotal: string;
+	expenceTotal: string;
+	balance: string;
+}

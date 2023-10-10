@@ -41,10 +41,10 @@
     border-radius: 40px;
     padding: 10px;
     margin-top: 54px;
-    margin-left: 320px;
+    margin-left: 290px;
     background-color: #ffffff;
     position: relative;
-    width: 260px;
+    width: 290px;
 }
 
 .accountBookDateSearchBox .accoutBookYearSelectBox {
@@ -56,7 +56,7 @@
     margin-right: 10px;
     border-radius: 20px;
     border: none;
-    background-color: #f7f7f7;
+    background-color: #ffffff;
     width: 100px;
 }
 
@@ -220,4 +220,22 @@
 .plusPayBox .plusAndMinusIcon,
 .minusPayBox .plusAndMinusIcon {
     margin-right: 5px;
+}
+
+.refreshBox{
+    position: relative;
+}
+
+.refreshBox .refreshButton {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.refreshButton {
+    font-size: 18px;
+    position: absolute;
+    transform: translateY(-80%);
+    margin-left:260px;
 }

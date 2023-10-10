@@ -9,12 +9,8 @@ import {
   Param,
   ParseIntPipe,
 } from '@nestjs/common';
-import { AdminService, datesObject } from './admin.service';
-import {
-  CreateAcccountBookDto,
-  SearchAccountBookDto,
-  UpdateAccountBookDto,
-} from './admin.dto';
+import { AdminService, AllAcountBookObject } from './admin.service';
+import { CreateAcccountBookDto, UpdateAccountBookDto } from './admin.dto';
 import { AccountBook } from 'src/entity/accountBook.entity';
 import { JwtAuthGuard } from '../auth/guard/jwt.guard';
 import { ApiResult } from 'src/error/apiResult';
@@ -42,22 +38,11 @@ export class AdminController {
     };
   }
 
-  @Get('/accountBook/date')
-  getAccountBooksAndDatesByUserId(
+  @Get('/accountBook')
+  getAllAccountBookAndDatesByUserId(
     @UserInfo() user: User,
-  ): Promise<datesObject> {
-    return this.adminService.getAccountBooksAndDatesByUserId(user.id);
-  }
-
-  @Post('/accountBook/search')
-  searchAccountBooksByDateAndUserId(
-    @Body() searchAccountBookDto: SearchAccountBookDto,
-    @UserInfo() user: User,
-  ): Promise<AccountBook[]> {
-    return this.adminService.searchAccountBooksByDateAndUserId(
-      searchAccountBookDto,
-      user.id,
-    );
+  ): Promise<AllAcountBookObject> {
+    return this.adminService.getAllAccountBooksAndDatesByUserId(user.id);
   }
 
   @Patch('/accountBook/:id')

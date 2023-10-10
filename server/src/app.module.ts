@@ -9,6 +9,7 @@ import { AuthModule } from './feature/auth/auth.app.module';
 import { AdminModule } from './feature/admin/admin.app.module';
 import { AccountBook } from './entity/accountBook.entity';
 import { AccountBookModule } from './feature/accountBook/accountBook.app.module';
+import { SearchModule } from './feature/search/search.app.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { AccountBookModule } from './feature/accountBook/accountBook.app.module'
     UserModule,
     AdminModule,
     AccountBookModule,
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [AppService],

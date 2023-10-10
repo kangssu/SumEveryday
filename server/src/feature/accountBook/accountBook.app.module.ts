@@ -3,11 +3,12 @@ import { AccountBookController } from './accountBook.controller';
 import { AccountBookService } from './accountBook.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountBook } from 'src/entity/accountBook.entity';
+import { AccountBookLib } from './accountBook.lib';
 
 @Module({
   imports: [TypeOrmModule.forFeature([AccountBook])],
-  providers: [AccountBookService],
+  providers: [AccountBookService, AccountBookLib],
   controllers: [AccountBookController],
-  exports: [AccountBookService],
+  exports: [AccountBookService, AccountBookLib],
 })
 export class AccountBookModule {}
