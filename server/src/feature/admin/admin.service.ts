@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { CreateAcccountBookDto, UpdateAccountBookDto } from './admin.dto';
 import { AccountBook } from 'src/entity/accountBook.entity';
 import { AccountBookService } from '../accountBook/accountBook.service';
-import { SearchAccountBookDto } from '../search/search.dto';
 
 export interface AllAcountBookObject {
   years: number[];
@@ -42,15 +41,5 @@ export class AdminService {
 
   deleteAccountBookById(id: number): Promise<AccountBook> {
     return this.accountBookService.deleteAccountBookById(id);
-  }
-
-  searchAccountBooksByUserIdAndDate(
-    searchAccountBookDto: SearchAccountBookDto,
-    userId: string,
-  ): Promise<AccountBook[]> {
-    return this.accountBookService.searchAccountBooksByUserIdAndDate(
-      searchAccountBookDto,
-      userId,
-    );
   }
 }
