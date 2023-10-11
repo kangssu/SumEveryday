@@ -17,6 +17,7 @@ import { Category } from "../../enum/accountBook.enum";
 import React from "react";
 import { AllAcountBookObject, dateObject } from "../../object/adminObject";
 import { FieldErrors, useForm } from "react-hook-form";
+import DateConbineErrorMessage from "../../components/errorMessage/dateConbineErrorMessage";
 
 export default function AccountBook() {
 	const history = useNavigate();
@@ -33,6 +34,7 @@ export default function AccountBook() {
 		reset,
 		formState: { errors },
 	} = useForm<dateObject>();
+
 	const [weekMaxCount, setWeekMaxCount] = useState(0);
 	const [nowMonth, setNowMonth] = useState("");
 	const [weeklyAccountBook, setWeeklyAccountBook] =
@@ -534,27 +536,6 @@ export default function AccountBook() {
 		return result;
 	};
 
-	const conbineErrorMessages = (errors: FieldErrors<dateObject>) => {
-		const errorTypes = [];
-		if (errors.year !== undefined) {
-			errorTypes.push("년도");
-		}
-		if (errors.month !== undefined) {
-			errorTypes.push("월");
-		}
-
-		const combineErrorTypes = errorTypes.join(", ");
-		if (errorTypes.length > 0) {
-			return (
-				<div className="accountBookErrorMessage">
-					📌 {combineErrorTypes}의 값들은 전부 필수 선택 해야합니다!
-				</div>
-			);
-		}
-
-		return null;
-	};
-
 	return (
 		<div className="container">
 			<Header />
@@ -662,7 +643,7 @@ export default function AccountBook() {
 						</table>
 					</div>
 				</div>
-				{conbineErrorMessages(errors)}
+				<DateConbineErrorMessage {...errors} />
 				<div className="subBoxBottom">
 					<div className="weekTableBox">
 						<table>

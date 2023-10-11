@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AllAcountBookObject, dateObject } from "../../object/adminObject";
-import { FieldErrors, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { AccountBookObject } from "../../object/accountBookObject";
 import { AiFillPlusSquare } from "react-icons/ai";
 import { AiFillMinusSquare } from "react-icons/ai";
@@ -8,12 +8,13 @@ import { GrPowerReset } from "react-icons/gr";
 import { Category } from "../../enum/accountBook.enum";
 import AccountBookModify from "./modal/accountBookModify";
 import AccountBookDelete from "./modal/accountBookDelete";
+import AdminDateConbineErrorMessage from "../errorMessage/adminDateConbineErrorMessage";
 
 export default function DateSearchForm() {
 	const refresh = () => {
 		window.location.reload();
 	};
-	const [date, setDate] = useState<AllAcountBookObject>();
+
 	const {
 		register,
 		handleSubmit,
@@ -21,6 +22,7 @@ export default function DateSearchForm() {
 		formState: { errors },
 	} = useForm<dateObject>();
 
+	const [date, setDate] = useState<AllAcountBookObject>();
 	const [listByDate, setListByDate] = useState([]);
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 	const [modifyModalOpen, setModifyModalOpen] = useState(false);
@@ -73,27 +75,6 @@ export default function DateSearchForm() {
 			});
 	};
 
-	const conbineErrorMessages = (errors: FieldErrors<dateObject>) => {
-		const errorTypes = [];
-		if (errors.year !== undefined) {
-			errorTypes.push("년도");
-		}
-		if (errors.month !== undefined) {
-			errorTypes.push("월");
-		}
-
-		const combineErrorTypes = errorTypes.join(", ");
-		if (errorTypes.length > 0) {
-			return (
-				<div className="adminErrorMessage">
-					📌 {combineErrorTypes}의 값들은 전부 필수 선택 해야합니다!
-				</div>
-			);
-		}
-
-		return null;
-	};
-
 	return (
 		<>
 			<div className="searchBox">
@@ -136,7 +117,7 @@ export default function DateSearchForm() {
 					<GrPowerReset className="grPowerReset" />
 				</button>
 			</div>
-			{conbineErrorMessages(errors)}
+			<AdminDateConbineErrorMessage {...errors} />
 			{listByDate.length > 0 ? (
 				<div className="searchListBox">
 					{listByDate.map((list: AccountBookObject) => (
