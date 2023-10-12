@@ -1,7 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UserErrorMessageObject } from './user.dto';
 import { ErrorCode } from 'src/enum/errorCode.enum';
+import { UserInfo } from 'src/decorator/userDecorator';
+import { User } from 'src/entity/user.entity';
+import { JwtAuthGuard } from '../auth/guard/jwt.guard';
 
 @Controller({
   path: '/api',
@@ -32,5 +35,11 @@ export class UserController {
 
     await this.userService.createUser(createUserDto);
     return userDuplicateErrorMessageObject;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/user')
+  getUserByUserId(@UserInfo() user: User) {
+    return this.userService.getUserByUserId(user.id);
   }
 }

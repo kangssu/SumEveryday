@@ -16,7 +16,7 @@ export class AuthController {
     user?: User;
     userErrorMessageObject: UserErrorMessageObject;
   }> {
-    const user = await this.authService.getUser(loginUserDto.id);
+    const user = await this.authService.getUserByUserId(loginUserDto.id);
     const userLoginErrorMessageObject: UserErrorMessageObject = {};
 
     if (!user) {

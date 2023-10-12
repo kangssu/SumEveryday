@@ -13,8 +13,8 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  getUser(id: string) {
-    return this.userService.getUser(id);
+  getUserByUserId(id: string) {
+    return this.userService.getUserByUserId(id);
   }
 
   async validateUser(
