@@ -49,7 +49,7 @@ export default function AccountBookModify(props: modalPropType) {
 			.then((res) => res.json())
 			.then((data) => {
 				console.log("data", data);
-				if (!data.success && data.statusCode === 404) {
+				if (!data.success || data.statusCode === 404) {
 					reset();
 					alert(`${data.message}`);
 				} else {

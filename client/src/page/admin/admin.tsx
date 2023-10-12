@@ -44,9 +44,9 @@ export default function Admin() {
 			.then((res) => res.json())
 			.then((data) => {
 				console.log("data", data);
-				if (!data.success && data.statusCode === 404) {
+				if (!data.success ||  data.statusCode === 404) {
 					reset();
-					alert(`${data.message}`);
+					alert(`제대로 등록되지 않았습니다! (원인 : ${data.message})`);
 				} else {
 					alert("정상적으로 등록되었습니다!");
 					reset();
