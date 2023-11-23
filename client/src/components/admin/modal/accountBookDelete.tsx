@@ -15,7 +15,7 @@ export default function AccountBookDelete(props: modalPropType) {
 	};
 
 	const onSubmit = (id: number) => {
-		fetch(`/api/accountBook/${id}`, {
+		fetch(`/api/accountBooks/${id}`, {
 			method: "DELETE",
 			headers: {
 				"Content-type": "application/json",

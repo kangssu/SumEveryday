@@ -2,15 +2,15 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto, UserErrorMessageObject } from '../user/user.dto';
 import { User } from 'src/entity/user.entity';
-import { ErrorCode } from 'src/enum/errorCode.enum';
+import { ErrorMessage } from 'src/enum/errorMessage.enum';
 
 @Controller({
-  path: '/api',
+  path: '/api/auth',
 })
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('/login')
+  @Post('/sign-in')
   async loginUser(@Body() loginUserDto: LoginUserDto): Promise<{
     accessToken?: string;
     user?: User;
@@ -20,7 +20,8 @@ export class AuthController {
     const userLoginErrorMessageObject: UserErrorMessageObject = {};
 
     if (!user) {
-      userLoginErrorMessageObject.idErrorMessage = ErrorCode.USER_ID_NOTFOUND;
+      userLoginErrorMessageObject.idErrorMessage =
+        ErrorMessage.USER_ID_NOTFOUND;
       return {
         userErrorMessageObject: userLoginErrorMessageObject,
       };

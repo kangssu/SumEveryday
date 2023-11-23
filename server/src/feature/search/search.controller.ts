@@ -9,12 +9,12 @@ import { SearchAccountBookDto } from './search.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller({
-  path: '/api',
+  path: '/api/accountBooks',
 })
 export class SearchController {
   constructor(private readonly searchService: SearchService) {}
 
-  @Post('/accountBook/search')
+  @Post('/search')
   searchWeeklyAccountBooksAndTotalByUserIdAndDate(
     @Body() searchAccountBookDto: SearchAccountBookDto,
     @UserInfo() user: User,
@@ -25,7 +25,7 @@ export class SearchController {
     );
   }
 
-  @Post('/accountBook/admin/search')
+  @Post('/admin/search')
   searchAccountBooksByUserIdAndDate(
     @Body() searchAccountBookDto: SearchAccountBookDto,
     @UserInfo() user: User,

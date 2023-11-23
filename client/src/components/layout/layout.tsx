@@ -31,7 +31,7 @@ export default function Layout() {
 		setIdError("");
 		setPasswordError("");
 
-		fetch(`/api/login`, {
+		fetch(`/api/auth/sign-in`, {
 			method: "POST",
 			headers: { "Content-type": "application/json" },
 			body: JSON.stringify({

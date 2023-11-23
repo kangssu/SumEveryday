@@ -8,7 +8,7 @@ export default function Header() {
 	const [userNickname, setUserNickname] = useState("");
 
 	useEffect(() => {
-		fetch("/api/user", {
+		fetch("/api/users", {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",

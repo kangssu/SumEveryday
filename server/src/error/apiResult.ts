@@ -1,4 +1,4 @@
-import { ErrorCode } from 'src/enum/errorCode.enum';
+import { ErrorMessage } from 'src/enum/errorMessage.enum';
 
 type SuccessResult<T> = T extends void
   ? { success: true }
@@ -6,7 +6,7 @@ type SuccessResult<T> = T extends void
 
 type FailResult = {
   success: false;
-  errorCode: ErrorCode;
+  errorCode: ErrorMessage;
   message: string;
 };
 

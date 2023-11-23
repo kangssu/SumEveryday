@@ -34,7 +34,7 @@ export default function Join({ setJoinModalOpen }: modalPropType) {
 		setIdDuplicateError("");
 		setNicknameDuplicateError("");
 
-		fetch(`/api/user/sign-up`, {
+		fetch(`/api/users/sign-up`, {
 			method: "POST",
 			headers: { "Content-type": "application/json" },
 			body: JSON.stringify({

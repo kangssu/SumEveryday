@@ -14,7 +14,7 @@ import { User } from 'src/entity/user.entity';
 export class AccountBookController {
   constructor(private readonly accountBookService: AccountBookService) {}
 
-  @Get('/accountBook/currentMonth')
+  @Get('/accountBooks/currentMonth')
   getCurrentMonthWeeklyAccountBooksAndTotalByUserId(
     @UserInfo() user: User,
   ): Promise<FinancialRecordsObject> {

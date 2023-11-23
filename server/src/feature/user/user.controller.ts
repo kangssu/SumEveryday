@@ -1,18 +1,18 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UserErrorMessageObject } from './user.dto';
-import { ErrorCode } from 'src/enum/errorCode.enum';
+import { ErrorMessage } from 'src/enum/errorMessage.enum';
 import { UserInfo } from 'src/decorator/userDecorator';
 import { User } from 'src/entity/user.entity';
 import { JwtAuthGuard } from '../auth/guard/jwt.guard';
 
 @Controller({
-  path: '/api',
+  path: '/api/users',
 })
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post('/user/sign-up')
+  @Post('/sign-up')
   async createUser(
     @Body() createUserDto: CreateUserDto,
   ): Promise<UserErrorMessageObject> {
@@ -23,11 +23,11 @@ export class UserController {
       for (const user of users) {
         if (user.id === createUserDto.id) {
           userDuplicateErrorMessageObject.idErrorMessage =
-            ErrorCode.USER_ID_DUPLICATE;
+            ErrorMessage.USER_ID_DUPLICATE;
         }
         if (user.nickname === createUserDto.nickname) {
           userDuplicateErrorMessageObject.nicknameErrorMessage =
-            ErrorCode.USER_NICKNAME_DUPLICATE;
+            ErrorMessage.USER_NICKNAME_DUPLICATE;
         }
       }
       return userDuplicateErrorMessageObject;
@@ -38,7 +38,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/user')
+  @Get()
   getUserByUserId(@UserInfo() user: User) {
     return this.userService.getUserByUserId(user.id);
   }

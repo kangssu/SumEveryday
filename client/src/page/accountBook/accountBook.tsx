@@ -42,7 +42,7 @@ export default function AccountBook() {
 	const [date, setDate] = useState<AllAcountBookObject>();
 
 	useEffect(() => {
-		fetch("/api/accountBook/currentMonth", {
+		fetch("/api/accountBooks/currentMonth", {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -73,7 +73,7 @@ export default function AccountBook() {
 	}, []);
 
 	useEffect(() => {
-		fetch("/api/accountBook", {
+		fetch("/api/accountBooks", {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -88,7 +88,7 @@ export default function AccountBook() {
 	}, []);
 
 	const onSubmit = (data: dateObject) => {
-		fetch("/api/accountBook/search", {
+		fetch("/api/accountBooks/search", {
 			method: "POST",
 			headers: {
 				"Content-type": "application/json",

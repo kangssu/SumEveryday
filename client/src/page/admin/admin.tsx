@@ -25,7 +25,7 @@ export default function Admin() {
 	const onSubmit = (data: AccountBookObject) => {
 		console.log(data);
 
-		fetch(`/api/accountBook/create`, {
+		fetch(`/api/accountBooks`, {
 			method: "POST",
 			headers: {
 				"Content-type": "application/json",

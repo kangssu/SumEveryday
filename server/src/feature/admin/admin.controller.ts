@@ -8,6 +8,7 @@ import {
   Patch,
   Param,
   ParseIntPipe,
+  HttpException,
 } from '@nestjs/common';
 import { AdminService, AllAcountBookObject } from './admin.service';
 import { CreateAcccountBookDto, UpdateAccountBookDto } from './admin.dto';
@@ -16,15 +17,17 @@ import { JwtAuthGuard } from '../auth/guard/jwt.guard';
 import { ApiResult } from 'src/error/apiResult';
 import { UserInfo } from 'src/decorator/userDecorator';
 import { User } from 'src/entity/user.entity';
+import { ErrorMessage } from 'src/enum/errorMessage.enum';
+import { ErrorCode } from 'src/enum/errorCode.enum';
 
 @UseGuards(JwtAuthGuard)
 @Controller({
-  path: '/api',
+  path: '/api/accountBooks',
 })
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
-  @Post('/accountBook/create')
+  @Post()
   async createAccountBook(
     @Body() createAccountBookDto: CreateAcccountBookDto,
     @UserInfo() user: User,
@@ -38,25 +41,44 @@ export class AdminController {
     };
   }
 
-  @Get('/accountBook')
+  @Get()
   getAllAccountBookAndDatesByUserId(
     @UserInfo() user: User,
   ): Promise<AllAcountBookObject> {
     return this.adminService.getAllAccountBooksAndDatesByUserId(user.id);
   }
 
-  @Patch('/accountBook/:id')
-  updateAccountBookById(
+  @Patch('/:id')
+  async updateAccountBookById(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateAccountBook: UpdateAccountBookDto,
   ): Promise<AccountBook> {
-    return this.adminService.updateAccountBookById(id, updateAccountBook);
+    const accountBook =
+      await this.adminService.getAccountBookByAccountBookId(id);
+
+    if (!accountBook) {
+      throw new HttpException(
+        ErrorMessage.NOT_FOUND_ACCOUNT_BOOK,
+        ErrorCode.NOT_FOUNT,
+      );
+    }
+    return await this.adminService.updateAccountBookById(id, updateAccountBook);
   }
 
-  @Delete('/accountBook/:id')
+  @Delete('/:id')
   async deleteAccountBookById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<ApiResult<AccountBook>> {
+    const accountBook =
+      await this.adminService.getAccountBookByAccountBookId(id);
+
+    if (!accountBook) {
+      throw new HttpException(
+        ErrorMessage.NOT_FOUND_ACCOUNT_BOOK,
+        ErrorCode.NOT_FOUNT,
+      );
+    }
+
     return {
       success: true,
       data: await this.adminService.deleteAccountBookById(id),

@@ -9,7 +9,7 @@ import {
   UpdateAccountBookDto,
 } from '../admin/admin.dto';
 import { AllAcountBookObject } from '../admin/admin.service';
-import { ErrorCode } from 'src/enum/errorCode.enum';
+import { ErrorMessage } from 'src/enum/errorMessage.enum';
 import { CustomException } from 'src/error/customException';
 import { SearchAccountBookDto } from '../search/search.dto';
 
@@ -49,7 +49,7 @@ export class AccountBookService {
     );
 
     if (!weekResult) {
-      throw new CustomException(ErrorCode.NON_EXISTENT_DAY, 404);
+      throw new CustomException(ErrorMessage.NON_EXISTENT_DAY, 404);
     }
 
     const accountBookObject = {
@@ -114,6 +114,10 @@ export class AccountBookService {
     };
   }
 
+  getAccountBookById(id: number): Promise<AccountBook> {
+    return this.accountBookRepository.findOne({ where: { no: id } });
+  }
+
   async updateAccountBookById(
     id: number,
     updateAccountBookDto: UpdateAccountBookDto,
@@ -123,7 +127,7 @@ export class AccountBookService {
       where: { no: id },
     });
 
-    if (updateAccountBookDto.date.month) {
+    if (updateAccountBookDto.date?.month) {
       accountBook.date.month = updateAccountBookDto.date.month;
 
       accountBook.week = Util.calculateWeek(
@@ -132,7 +136,7 @@ export class AccountBookService {
         accountBook.date.day,
       );
     }
-    if (updateAccountBookDto.date.day) {
+    if (updateAccountBookDto.date?.day) {
       accountBook.date.day = updateAccountBookDto.date.day;
 
       const weekResult = Util.calculateWeek(
@@ -142,7 +146,7 @@ export class AccountBookService {
       );
 
       if (!weekResult) {
-        throw new CustomException(ErrorCode.NON_EXISTENT_DAY, 404);
+        throw new CustomException(ErrorMessage.NON_EXISTENT_DAY, 404);
       }
 
       accountBook.week = weekResult;

@@ -40,7 +40,7 @@ export default function DateSearchForm() {
 	};
 
 	useEffect(() => {
-		fetch("/api/accountBook", {
+		fetch("/api/accountBooks", {
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
@@ -57,7 +57,7 @@ export default function DateSearchForm() {
 
 	const onSubmit = (data: dateObject) => {
 		setListByDate([]);
-		fetch("/api/accountBook/admin/search", {
+		fetch("/api/accountBooks/admin/search", {
 			method: "POST",
 			headers: {
 				"Content-type": "application/json",

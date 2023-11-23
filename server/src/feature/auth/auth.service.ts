@@ -3,7 +3,7 @@ import { UserService } from '../user/user.service';
 import { User } from 'src/entity/user.entity';
 import { LoginUserDto, UserErrorMessageObject } from '../user/user.dto';
 import * as bcrypt from 'bcrypt';
-import { ErrorCode } from 'src/enum/errorCode.enum';
+import { ErrorMessage } from 'src/enum/errorMessage.enum';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -35,7 +35,7 @@ export class AuthService {
 
       if (!passwordCheck) {
         userLoginErrorMessageObject.passwordErrorMessage =
-          ErrorCode.USER_PASSWORD_NOTMATCH;
+          ErrorMessage.USER_PASSWORD_NOTMATCH;
         return {
           userErrorMessageObject: userLoginErrorMessageObject,
         };

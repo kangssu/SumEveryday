@@ -29,6 +29,10 @@ export class AdminService {
     return this.accountBookService.getAllAccountBooksAndDatesByUserId(userId);
   }
 
+  getAccountBookByAccountBookId(accountBookId: number): Promise<AccountBook> {
+    return this.accountBookService.getAccountBookById(accountBookId);
+  }
+
   async updateAccountBookById(
     id: number,
     updateAccountBookDto: UpdateAccountBookDto,

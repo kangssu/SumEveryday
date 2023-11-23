@@ -30,7 +30,7 @@ export default function AccountBookModify(props: modalPropType) {
 	const onSubmit = (data: AccountBookObject) => {
 		console.log("data : ", data);
 
-		fetch(`/api/accountBook/${props.clickedAccountBook?.no}`, {
+		fetch(`/api/accountBooks/${props.clickedAccountBook?.no}`, {
 			method: "PATCH",
 			headers: {
 				"Content-type": "application/json",
