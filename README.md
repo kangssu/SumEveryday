@@ -75,7 +75,7 @@ npm run start
 <summary><strong>ERD</strong></summary>
 <div markdown="1">
  
-<img src="https://github.com/kangssu/Curiosity-solved/assets/83870420/8132bfbf-42b6-437d-9a4a-f7a04d38e596">
+<img src="https://github.com/kangssu/SumEveryday/assets/83870420/2d064e62-02bc-457f-95c8-ce9589184e58">
 </div>
 </details>
 
