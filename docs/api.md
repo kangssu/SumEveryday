@@ -16,7 +16,7 @@ POST /api/users/sign-up
 * **Success Response**
 ```
 {
-    // 따로 리턴값 X
+    // 리턴값 X
 }
 ```
 
