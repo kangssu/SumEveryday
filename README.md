@@ -7,6 +7,7 @@
 <img src="https://github.com/kangssu/SumEveryday/assets/83870420/592c5dd5-bd4b-4ad5-ad16-00a948d67ff4">
 
 </br>
+</br>
 
 ## 목차
 #### [1. 개요](#개요)
