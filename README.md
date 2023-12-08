@@ -2,7 +2,9 @@
 > 사실 종이 가계부로 사용하다가 7월달이 마지막 장인 걸 알게 되었고, 또 새롭게 살바에는 내가 만들어서 쓰겠다!라는 생각으로 진행하게 되었습니다.
 > 혹시나 제가 원하는 심플한 가계부 구성을 누군가가 원할수도 있지 않을까하는 생각도 하면서 즐겁게 만들었습니다.
 
-![썸메인](https://github.com/kangssu/SumEveryday/assets/83870420/b11b4647-f759-4394-9e78-f7fad87328a8)
+<img src="https://github.com/kangssu/SumEveryday/assets/83870420/5504d804-9519-4fd1-bd5b-52a09c5400ce">
+<img src="https://github.com/kangssu/SumEveryday/assets/83870420/e36edc7f-7689-4a41-8f0b-e1fdfe5f8e06">
+<img src="https://github.com/kangssu/SumEveryday/assets/83870420/592c5dd5-bd4b-4ad5-ad16-00a948d67ff4">
 
 </br>
 
